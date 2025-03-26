@@ -29,7 +29,7 @@ interface ModernTemplateProps {
 
 export function ModernTemplate({ content, className }: ModernTemplateProps) {
   return (
-    <div className={cn("max-w-[850px] mx-auto p-8 bg-white", className)}>
+    <div className={cn("max-w-[850px] mx-auto p-8 bg-white text-gray-800", className)}>
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold mb-2">{content.name}</h1>
         <h2 className="text-xl text-gray-600 mb-4">{content.title}</h2>

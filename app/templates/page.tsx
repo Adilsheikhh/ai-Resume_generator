@@ -4,6 +4,8 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { MinimalTemplate } from "@/components/resume-templates/minimal";
 import { ModernTemplate } from "@/components/resume-templates/modern";
+import { ModernPlusTemplate } from "@/components/resume-templates/modern-plus";
+import { ClassicTemplate } from "@/components/resume-templates/classic";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
 
 const sampleData = {

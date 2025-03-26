@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -19,26 +20,30 @@ interface SectionProps {
 
 export function ResumeSection({ title, content, onContentChange, fields }: SectionProps) {
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className="shadow-lg transition-all hover:shadow-xl">
+      <CardHeader className="bg-muted/50">
+        <CardTitle className="text-xl">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6">
         {fields && (
-          <div className="space-y-4 mb-4">
+          <div className="space-y-4 mb-6">
             {fields.map((field, index) => (
-              <div key={index}>
-                <Label>{field.label}</Label>
+              <div key={index} className="space-y-2">
+                <Label className="text-sm font-medium">{field.label}</Label>
                 <Input
                   value={field.value}
                   onChange={(e) => field.onChange(e.target.value)}
-                  className="mt-1"
+                  className="transition-all focus:ring-2 focus:ring-primary"
+                  placeholder={`Enter your ${field.label.toLowerCase()}`}
                 />
               </div>
             ))}
           </div>
         )}
-        <ResumeEditor content={content} onChange={onContentChange} />
+        <ResumeEditor 
+          content={content} 
+          onChange={onContentChange} 
+        />
       </CardContent>
     </Card>
   );

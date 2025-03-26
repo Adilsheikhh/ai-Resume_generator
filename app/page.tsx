@@ -5,6 +5,12 @@ import Link from "next/link";
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Logo */}
+      <div className="absolute top-4 left-4">
+        <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+          A-I
+        </h1>
+      </div>
       {/* Hero Section */}
       <main className="flex-grow">
         <div className="px-6 lg:px-8 py-24 sm:py-32">
@@ -100,7 +106,7 @@ export default function Home() {
           </div>
           <div className="mt-8 md:order-1 md:mt-0">
             <p className="text-center text-sm leading-6 text-muted-foreground">
-              &copy; {new Date().getFullYear()} AI Resume Builder. All rights reserved.
+              &copy; {new Date().getFullYear()} AI Resume Builder. All rights reserved. | Developed by AdilSheikh
             </p>
           </div>
         </div>
