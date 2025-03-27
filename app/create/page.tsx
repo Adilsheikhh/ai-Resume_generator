@@ -1,60 +1,93 @@
-
 "use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { UploadButton } from '@/components/file-upload/upload-button';
-import { ResumeSection } from '@/components/resume-editor/section';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MinimalTemplate } from '@/components/resume-templates/minimal';
-import { ModernTemplate } from '@/components/resume-templates/modern';
-import { ProfessionalTemplate } from '@/components/resume-templates/professional';
-import { toast } from '@/hooks/use-toast';
-import { Loader2 } from 'lucide-react';
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSearchParams } from "next/navigation";
+import { ModernTemplate } from "@/components/resume-templates/modern";
+import { MinimalTemplate } from "@/components/resume-templates/minimal";
+import { TechTemplate } from "@/components/resume-templates/tech";
+import { ExecutiveTemplate } from "@/components/resume-templates/executive";
+import { CreativeTemplate } from "@/components/resume-templates/creative";
+import { ProfessionalTemplate } from "@/components/resume-templates/professional";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { ResumeSection } from "@/components/resume-editor/section";
+import { useToast } from "@/components/ui/use-toast";
+import { UploadButton } from "@/components/file-upload/upload-button";
 
-export default function CreateResume() {
-  const { data: session } = useSession();
+const sampleData = {
+  name: "John Doe",
+  title: "Software Engineer",
+  contact: {
+    email: "john@example.com",
+    phone: "(555) 123-4567",
+    location: "San Francisco, CA"
+  },
+  summary: "Experienced software engineer with a passion for building scalable applications",
+  experience: [
+    {
+      position: "Senior Software Engineer",
+      company: "Tech Corp",
+      duration: "2020 - Present",
+      description: ["Led development of cloud-based solutions", "Managed team of 5 engineers"]
+    }
+  ],
+  education: [
+    {
+      degree: "B.S. Computer Science",
+      school: "Stanford University",
+      location: "Stanford, CA",
+      startDate: "2012",
+      endDate: "2016"
+    }
+  ],
+  skills: ["JavaScript", "React", "Node.js", "Python", "AWS"]
+};
+
+const templates = [
+  { id: "modern", name: "Modern", component: ModernTemplate },
+  { id: "minimal", name: "Minimal", component: MinimalTemplate },
+  { id: "tech", name: "Tech", component: TechTemplate },
+  { id: "executive", name: "Executive", component: ExecutiveTemplate },
+  { id: "creative", name: "Creative", component: CreativeTemplate },
+  { id: "professional", name: "Professional", component: ProfessionalTemplate },
+];
+
+export default function CreatePage() {
+  const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
+  const [resumeData, setResumeData] = useState(sampleData);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [resumeData, setResumeData] = useState({
-    name: '',
-    title: '',
-    contact: {
-      email: '',
-      phone: '',
-      location: '',
-    },
-    summary: '',
-    experience: [],
-    education: [],
-    skills: [],
-  });
-  const [selectedTemplate, setSelectedTemplate] = useState('modern');
+
+  const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
 
   const handleUpload = async (content: string) => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      const response = await fetch('/api/resume/upload', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          title: 'My Resume',
-          content,
-          template: selectedTemplate,
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to upload resume');
-      
+      const parsedData = JSON.parse(content);
+      if (!parsedData || typeof parsedData !== 'object') {
+        throw new Error("Invalid resume format");
+      }
+      setResumeData(parsedData);
       toast({
-        title: "Success",
-        description: "Resume uploaded successfully!",
+        title: "Resume uploaded",
+        description: "Your resume has been successfully parsed.",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: error.message,
+        description: "Failed to parse resume. Ensure it's a valid JSON format.",
         variant: "destructive",
       });
     } finally {
@@ -62,134 +95,78 @@ export default function CreateResume() {
     }
   };
 
-  const handleEnhance = async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/resume/enhance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(resumeData),
-      });
-
-      if (!response.ok) throw new Error('Failed to enhance resume');
-      
-      const enhanced = await response.json();
-      setResumeData(enhanced);
-      
-      toast({
-        title: "Success",
-        description: "Resume enhanced with AI!",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleUploadError = (error: string) => {
+    toast({
+      title: "Upload Error",
+      description: error,
+      variant: "destructive",
+    });
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <Card className="p-6 shadow-lg">
-            <h2 className="text-2xl font-bold mb-4">Create Your Resume</h2>
-            <div className="space-y-4">
-              <UploadButton
-                onUpload={handleUpload}
-                onError={(error) => toast({
-                  title: 'Error',
-                  description: error,
-                  variant: 'destructive',
-                })}
-              />
-              <Button 
-                onClick={handleEnhance} 
-                disabled={isLoading}
-                className="w-full"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Enhancing...
-                  </>
-                ) : (
-                  'Enhance with AI'
-                )}
-              </Button>
-            </div>
+    <div className="container mx-auto py-6 px-4">
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Left Panel - Editor */}
+        <div className="w-full lg:w-1/2 space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Create Resume</h1>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">Change Template</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-3xl">
+                <DialogHeader>
+                  <DialogTitle>Choose Template</DialogTitle>
+                </DialogHeader>
+                <div className="grid grid-cols-2 gap-4 p-4">
+                  {templates.map((template) => (
+                    <Card 
+                      key={template.id}
+                      className={cn(
+                        "cursor-pointer hover:bg-muted/50 transition-colors p-4",
+                        selectedTemplate === template.id && "border-primary"
+                      )}
+                      onClick={() => setSelectedTemplate(template.id)}
+                    >
+                      <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
+                        <div className="transform scale-[0.4]">
+                          <template.component content={sampleData} />
+                        </div>
+                      </div>
+                      <h3 className="text-sm font-medium mt-2 text-center">{template.name}</h3>
+                    </Card>
+                  ))}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Form fields will go here */}
+          <Card className="p-6">
+            <UploadButton onUpload={handleUpload} onError={handleUploadError} />
+            <ResumeSection
+              title="Personal Information"
+              data={resumeData}
+              onChange={setResumeData}
+            />
           </Card>
-
-          <ResumeSection
-            title="Personal Information"
-            content=""
-            fields={[
-              {
-                label: 'Full Name',
-                value: resumeData.name,
-                onChange: (value) => setResumeData({ ...resumeData, name: value }),
-              },
-              {
-                label: 'Professional Title',
-                value: resumeData.title,
-                onChange: (value) => setResumeData({ ...resumeData, title: value }),
-              },
-              {
-                label: 'Email',
-                value: resumeData.contact.email,
-                onChange: (value) => setResumeData({ 
-                  ...resumeData, 
-                  contact: { ...resumeData.contact, email: value }
-                }),
-              },
-              {
-                label: 'Phone',
-                value: resumeData.contact.phone,
-                onChange: (value) => setResumeData({ 
-                  ...resumeData, 
-                  contact: { ...resumeData.contact, phone: value }
-                }),
-              },
-              {
-                label: 'Location',
-                value: resumeData.contact.location,
-                onChange: (value) => setResumeData({ 
-                  ...resumeData, 
-                  contact: { ...resumeData.contact, location: value }
-                }),
-              },
-            ]}
-            onContentChange={() => {}}
-          />
-
-          <ResumeSection
-            title="Professional Summary"
-            content={resumeData.summary}
-            onContentChange={(content) => setResumeData({ ...resumeData, summary: content })}
-          />
         </div>
 
-        <div className="sticky top-8">
-          <Card className="shadow-lg">
-            <Tabs value={selectedTemplate} onValueChange={setSelectedTemplate}>
-              <TabsList className="grid grid-cols-3 w-full">
-                <TabsTrigger value="modern">Modern</TabsTrigger>
-                <TabsTrigger value="minimal">Minimal</TabsTrigger>
-                <TabsTrigger value="professional">Professional</TabsTrigger>
-              </TabsList>
-              <TabsContent value="modern">
-                <ModernTemplate content={resumeData} />
-              </TabsContent>
-              <TabsContent value="minimal">
-                <MinimalTemplate content={resumeData} />
-              </TabsContent>
-              <TabsContent value="professional">
-                <ProfessionalTemplate content={resumeData} />
-              </TabsContent>
-            </Tabs>
+        {/* Right Panel - Preview */}
+        <div className="w-full lg:w-1/2">
+          <Card className="sticky top-6">
+            <div className="p-4 border-b">
+              <h2 className="text-xl font-semibold">Preview</h2>
+            </div>
+            <ScrollArea className="h-[800px]">
+              <div className="p-6">
+                {selectedTemplateData && (
+                  <div className="border rounded-lg p-4 bg-white">
+                    <selectedTemplateData.component content={resumeData} />
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
           </Card>
         </div>
       </div>

@@ -1,4 +1,3 @@
-
 import { ResumeData } from '@/lib/types';
 
 export function ExecutiveTemplate({ content }: { content: ResumeData }) {
@@ -31,9 +30,13 @@ export function ExecutiveTemplate({ content }: { content: ResumeData }) {
             </div>
             <div className="text-gray-800 font-medium mb-2">{exp.position}</div>
             <ul className="list-disc ml-5 text-gray-700 space-y-1">
-              {exp.description.map((desc, i) => (
-                <li key={i}>{desc}</li>
-              ))}
+              {Array.isArray(exp.description) ? (
+                exp.description.map((desc, i) => (
+                  <li key={i}>{desc}</li>
+                ))
+              ) : (
+                <li>{exp.description}</li>
+              )}
             </ul>
           </div>
         ))}

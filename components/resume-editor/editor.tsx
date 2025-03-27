@@ -18,6 +18,7 @@ export function ResumeEditor({ content, onChange }: EditorProps) {
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
     },
+    immediatelyRender: false, // Added to address TipTap SSR warning (partial solution)
   });
 
   if (!editor) {

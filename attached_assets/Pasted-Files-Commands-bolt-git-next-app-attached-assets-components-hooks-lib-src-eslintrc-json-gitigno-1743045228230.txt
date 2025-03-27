@@ -1,0 +1,223 @@
+Files
+Commands
+.bolt
+.git
+.next
+app
+attached_assets
+components
+hooks
+lib
+src
+.eslintrc.json
+.gitignore
+.nvmrc
+components.json
+next-env.d.ts
+next.config.js
+postcss.config.js
+tailwind.config.ts
+tsconfig.json
+Packager files
+.upm
+node_modules
+package-lock.json
+package.json
+Config files
+.replit
+7
+Chats
+Archived
+Code Changes Toast Export and Node Version
+16 minutes ago
+
+fix terminal error
+AS
+adilsheikh78670
+Assistant16 minutes ago
+
+I see there are two main errors in the terminal:
+
+    The toast import error from '/hooks/use-toast'
+    TypeError: Promise.withResolvers is not a function
+
+Let's fix the toast import issue first by correcting the exports in use-toast.ts:
+hooks/use-toast.ts
+
+For the Promise.withResolvers error, we need to upgrade Node.js to a version that supports this feature. Let's add a .nvmrc file:
+.nvmrc
+
+Now let's install the specified Node.js version:
+nvm install 20.11.1 && nvm use 20.11.1 && npm install
+Checkpoint made
+Fix toast exports and upgrade Node.js
+16 minutes ago
+•
+
+fix terminal error and also after selecting upload file its shows failed to upload
+AS
+adilsheikh78670
+Assistant13 minutes ago
+
+I'll help fix the terminal errors. There are two main issues:
+
+    The toast import error
+    The Promise.withResolvers error in pdf-parser.ts
+
+Let's fix them:
+
+First, let's correct the toast import by updating create/page.tsx:
+app/create/page.tsx
+
+Now, let's modify the pdf-parser.ts to handle Promise resolution without using withResolvers:
+components/file-upload/pdf-parser.ts
+
+Let's also fix the upload-button.tsx to properly handle the toast:
+components/file-upload/upload-button.tsx
+Checkpoint made
+Fix toast imports and PDF parser implementation
+13 minutes ago
+•
+
+it gives terminal error and also state failed to parse uploaded file
+AS
+adilsheikh78670
+Assistant11 minutes ago
+
+I see two main issues causing the errors:
+
+    PDF worker initialization is missing
+    File parsing error handling needs improvement
+
+Let's fix them:
+
+    First, let's properly initialize the PDF.js worker:
+
+components/file-upload/pdf-parser.ts
+
+    Now let's update the upload button to better handle errors:
+
+components/file-upload/upload-button.tsx
+Checkpoint made
+Fix PDF parsing and error handling
+11 minutes ago
+•
+
+its gives this and also a plety of terminal error
+AS
+adilsheikh78670
+Assistant9 minutes ago
+
+I notice there's a toast-related error in your Next.js application. The issue is that the toast utility is not properly exported from the hooks directory. Let's fix both the toast hook and its usage:
+
+    First, let's fix the toast hook:
+
+hooks/use-toast.ts
+
+    Now let's fix the create page:
+
+app/create/page.tsx
+
+    For the TipTap SSR warning, we need to modify the editor configuration:
+
+components/resume-editor/editor.tsx
+Checkpoint made
+Fix toast exports and TipTap SSR warning
+9 minutes ago
+•
+
+its gives same error check all the releated files properly and made it work
+AS
+adilsheikh78670
+Assistant8 minutes ago
+
+I'll help fix the toast-related errors. The issue is with the toast implementation and imports. Let's fix the related files:
+components/ui/use-toast.tsx
+hooks/use-toast.ts
+components/ui/toaster.tsx
+
+This should resolve the toast-related errors you're seeing. The changes:
+
+    Created proper implementation of useToast
+    Fixed circular dependencies
+    Updated component implementations to match the shadcn/ui toast system
+
+Try refreshing your app now - the toast functionality should work correctly.
+Checkpoint made
+Fix toast implementation and dependencies
+7 minutes ago
+•
+
+it gives error while uploading resume can u please fix it as a proffesional
+AS
+adilsheikh78670
+Assistant5 minutes ago
+
+I'll help fix the resume upload error. Looking at the code and error logs, there are a few issues we need to address in the file upload handling. Let's fix the components:
+components/file-upload/pdf-parser.ts
+components/file-upload/upload-button.tsx
+Dependencies
+langchain
+
+These changes:
+
+    Add proper error handling in the PDF parser
+    Add loading state to the upload button
+    Validate file type before processing
+    Add better error messages and user feedback
+    Install required langchain package for PDF parsing
+
+Try uploading a resume now - you should see proper loading states and error messages if something goes wrong.
+Checkpoint made
+Fix resume upload functionality with better error handling
+4 minutes ago
+•
+
+u auto fix all the error and move with next step until it resolves
+AS
+adilsheikh78670
+Assistant3 minutes ago
+
+I'll help fix the errors. Looking at the logs, there are two main issues:
+
+    Toast component import/export issues
+    PDFLoader import error from langchain
+
+Let's fix these one by one:
+
+    First, let's fix the toast-related issues:
+
+components/ui/use-toast.tsx
+hooks/use-toast.ts
+
+    Now let's fix the PDFLoader issue by updating to the correct import path:
+
+components/file-upload/pdf-parser.ts
+
+Let's also make sure we have the correct package installed:
+Dependencies
+@langchain/community
+
+These changes should resolve the errors you're seeing. The key changes are:
+
+    Fixed the toast implementation and exports
+    Updated the PDFLoader import to use the web version instead of the fs version
+    Added proper error handling in the PDF parser
+    Installed the required langchain community package
+
+Try uploading a file now - it should work properly. Let me know if you see any other errors.
+Assistant automatically restarted your App after applying file changes. You can disable this behavior in
+.
+Checkpoint made
+Fix toast components and PDF parser
+just now
+•
+Assistant mode
+Claude 3.5 Sonnet V2
+
+Ask Assistant, use @ to include specific files...
+17m • 18 minutes ago
+Port :3000 opened on
+You can manage this config in the
+Enable "Accessible Terminal" in Workspace Settings to use a screen reader with the shell.
+10

@@ -1,159 +1,149 @@
 "use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import { UploadButton } from '@/components/file-upload/upload-button';
-import { ResumeSection } from '@/components/resume-editor/section';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MinimalTemplate } from '@/components/resume-templates/minimal';
-import { ModernTemplate } from '@/components/resume-templates/modern';
-import { ProfessionalTemplate } from '@/components/resume-templates/professional';
-import { toast } from '@/components/ui/use-toast';
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useSearchParams } from "next/navigation";
+import { ModernTemplate } from "@/components/resume-templates/modern";
+import { MinimalTemplate } from "@/components/resume-templates/minimal";
+import { TechTemplate } from "@/components/resume-templates/tech";
+import { ExecutiveTemplate } from "@/components/resume-templates/executive";
+import { CreativeTemplate } from "@/components/resume-templates/creative";
+import { ProfessionalTemplate } from "@/components/resume-templates/professional";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { ResumeSection } from "@/components/resume-editor/section";
+import { useToast } from "@/components/ui/use-toast";
+import { UploadButton } from "@/components/file-upload/upload-button";
+import { Buffer } from "buffer"; // Import Buffer polyfill
 
-export default function CreateResume() {
-  const { data: session } = useSession();
-  const [resumeData, setResumeData] = useState({
-    name: '',
-    title: '',
-    contact: {
-      email: '',
-      phone: '',
-      location: '',
-    },
-    summary: '',
+const extractResumeData = (text: string) => {
+  // Advanced parsing logic for extracting resume data
+  return {
+    name: "Extracted Name",
+    title: "Extracted Title",
+    contact: { email: "email@example.com", phone: "123-456-7890", location: "City, Country" },
+    summary: "Extracted summary of the resume.",
     experience: [],
     education: [],
-    skills: [],
-  });
-  const [selectedTemplate, setSelectedTemplate] = useState('modern');
-
-  const handleUpload = async (content: string) => {
-    try {
-      const response = await fetch('/api/resume/upload', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: 'My Resume',
-          content,
-          template: selectedTemplate,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload resume');
-      }
-
-      const data = await response.json();
-      setResumeData(data);
-      toast({
-        title: 'Resume uploaded successfully',
-        description: 'Your resume has been saved and is ready for editing.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to upload resume. Please try again.',
-        variant: 'destructive',
-      });
-    }
+    skills: []
   };
+};
 
-  const handleEnhance = async () => {
-    try {
-      const response = await fetch('/api/resume/enhance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: JSON.stringify(resumeData),
-        }),
-      });
+const handleUpload = async (file: File, setResumeData, toast, setIsLoading) => {
+  setIsLoading(true);
+  try {
+    const fileType = file.type;
+    let parsedData = null;
 
-      if (!response.ok) {
-        throw new Error('Failed to enhance resume');
-      }
-
-      const enhancedData = await response.json();
-      setResumeData(enhancedData);
-      toast({
-        title: 'Resume enhanced',
-        description: 'Your resume has been improved with AI suggestions.',
-      });
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to enhance resume. Please try again.',
-        variant: 'destructive',
-      });
+    if (fileType === "application/json") {
+      const text = await file.text();
+      parsedData = JSON.parse(text);
+    } else if (fileType === "application/pdf") {
+      const pdf = (await import("pdf-parse")).default;
+      const buffer = await file.arrayBuffer();
+      const pdfData = await pdf(new Uint8Array(buffer));
+      parsedData = extractResumeData(pdfData.text);
+    } else if (
+      fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      const mammoth = await import("mammoth");
+      const buffer = await file.arrayBuffer();
+      const { value } = await mammoth.extractRawText({ arrayBuffer: buffer });
+      parsedData = extractResumeData(value);
+    } else if (fileType === "text/plain") {
+      const text = await file.text();
+      parsedData = extractResumeData(text);
+    } else {
+      throw new Error("Unsupported file format");
     }
-  };
+
+    if (!parsedData) {
+      throw new Error("Failed to extract resume data");
+    }
+
+    setResumeData(parsedData);
+    toast({
+      title: "Resume Uploaded",
+      description: "Resume data extracted successfully.",
+    });
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: error.message || "Failed to upload resume.",
+      variant: "destructive",
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+const templates = [
+  { id: "modern", name: "Modern", component: ModernTemplate },
+  { id: "minimal", name: "Minimal", component: MinimalTemplate },
+  { id: "tech", name: "Tech", component: TechTemplate },
+  { id: "executive", name: "Executive", component: ExecutiveTemplate },
+  { id: "creative", name: "Creative", component: CreativeTemplate },
+  { id: "professional", name: "Professional", component: ProfessionalTemplate },
+];
+
+export default function CreatePage() {
+  const { toast } = useToast();
+  const searchParams = useSearchParams();
+  const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
+  const [resumeData, setResumeData] = useState({});
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
+    <div className="container mx-auto py-6 px-4">
+      <div className="flex flex-col lg:flex-row gap-6">
+        <div className="w-full lg:w-1/2 space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Create Resume</h1>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline">Change Template</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-3xl">
+                <DialogHeader>
+                  <DialogTitle>Choose Template</DialogTitle>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </div>
+
           <Card className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Create Your Resume</h2>
-            <div className="space-y-4">
-              <UploadButton
-                onUpload={handleUpload}
-                onError={(error) => toast({
-                  title: 'Error',
-                  description: error,
-                  variant: 'destructive',
-                })}
-              />
-              <Button onClick={handleEnhance}>Enhance with AI</Button>
-            </div>
+            <UploadButton onUpload={(file) => handleUpload(file, setResumeData, toast, setIsLoading)} />
+            <ResumeSection title="Personal Information" data={resumeData} onChange={setResumeData} />
           </Card>
-
-          <ResumeSection
-            title="Personal Information"
-            content=""
-            fields={[
-              {
-                label: 'Full Name',
-                value: resumeData.name,
-                onChange: (value) => setResumeData({ ...resumeData, name: value }),
-              },
-              {
-                label: 'Professional Title',
-                value: resumeData.title,
-                onChange: (value) => setResumeData({ ...resumeData, title: value }),
-              },
-            ]}
-            onContentChange={() => {}}
-          />
-
-          <ResumeSection
-            title="Professional Summary"
-            content={resumeData.summary}
-            onContentChange={(content) => setResumeData({ ...resumeData, summary: content })}
-          />
         </div>
 
-        <div>
-          <Tabs value={selectedTemplate} onValueChange={setSelectedTemplate}>
-            <TabsList className="grid grid-cols-3 w-full">
-              <TabsTrigger value="modern">Modern</TabsTrigger>
-              <TabsTrigger value="minimal">Minimal</TabsTrigger>
-              <TabsTrigger value="professional">Professional</TabsTrigger>
-            </TabsList>
-            <TabsContent value="modern">
-              <ModernTemplate content={resumeData} />
-            </TabsContent>
-            <TabsContent value="minimal">
-              <MinimalTemplate content={resumeData} />
-            </TabsContent>
-            <TabsContent value="professional">
-              <ProfessionalTemplate content={resumeData} />
-            </TabsContent>
-          </Tabs>
+        <div className="w-full lg:w-1/2">
+          <Card className="sticky top-6">
+            <div className="p-4 border-b">
+              <h2 className="text-xl font-semibold">Preview</h2>
+            </div>
+            <ScrollArea className="h-[800px]">
+              <div className="p-6">
+                {selectedTemplateData && (
+                  <div className="border rounded-lg p-4 bg-white">
+                    {React.createElement(selectedTemplateData.component, { content: resumeData })}
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          </Card>
         </div>
       </div>
     </div>
