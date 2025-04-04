@@ -1,13 +1,12 @@
-
 "use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Plus, Trash2 } from 'lucide-react';
-import { ResumeData } from '@/lib/types';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Plus, Trash2 } from "lucide-react";
+import { ResumeData } from "@/lib/types";
 
 interface ResumeSectionProps {
   data: ResumeData;
@@ -15,25 +14,36 @@ interface ResumeSectionProps {
   isLoading?: boolean;
 }
 
-export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps) {
+export function ResumeSection({
+  data,
+  onChange,
+  isLoading,
+}: ResumeSectionProps) {
   const handleChange = (section: string, value: any) => {
     onChange({
       ...data,
-      [section]: value
+      [section]: value,
     });
   };
 
   const addExperience = () => {
-    handleChange('experience', [
+    handleChange("experience", [
       ...data.experience,
-      { title: '', company: '', location: '', startDate: '', endDate: '', description: [] }
+      {
+        title: "",
+        company: "",
+        location: "",
+        startDate: "",
+        endDate: "",
+        description: [],
+      },
     ]);
   };
 
   const addEducation = () => {
-    handleChange('education', [
+    handleChange("education", [
       ...data.education,
-      { degree: '', school: '', location: '', startDate: '', endDate: '' }
+      { degree: "", school: "", location: "", startDate: "", endDate: "" },
     ]);
   };
 
@@ -47,7 +57,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             <Input
               id="name"
               value={data.name}
-              onChange={(e) => handleChange('name', e.target.value)}
+              onChange={(e) => handleChange("name", e.target.value)}
               disabled={isLoading}
             />
           </div>
@@ -56,7 +66,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             <Input
               id="title"
               value={data.title}
-              onChange={(e) => handleChange('title', e.target.value)}
+              onChange={(e) => handleChange("title", e.target.value)}
               disabled={isLoading}
             />
           </div>
@@ -71,7 +81,12 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             <Input
               id="email"
               value={data.contact.email}
-              onChange={(e) => handleChange('contact', { ...data.contact, email: e.target.value })}
+              onChange={(e) =>
+                handleChange("contact", {
+                  ...data.contact,
+                  email: e.target.value,
+                })
+              }
               disabled={isLoading}
             />
           </div>
@@ -80,7 +95,12 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             <Input
               id="phone"
               value={data.contact.phone}
-              onChange={(e) => handleChange('contact', { ...data.contact, phone: e.target.value })}
+              onChange={(e) =>
+                handleChange("contact", {
+                  ...data.contact,
+                  phone: e.target.value,
+                })
+              }
               disabled={isLoading}
             />
           </div>
@@ -89,7 +109,12 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             <Input
               id="location"
               value={data.contact.location}
-              onChange={(e) => handleChange('contact', { ...data.contact, location: e.target.value })}
+              onChange={(e) =>
+                handleChange("contact", {
+                  ...data.contact,
+                  location: e.target.value,
+                })
+              }
               disabled={isLoading}
             />
           </div>
@@ -100,7 +125,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
         <h2 className="text-lg font-semibold">Professional Summary</h2>
         <Textarea
           value={data.summary}
-          onChange={(e) => handleChange('summary', e.target.value)}
+          onChange={(e) => handleChange("summary", e.target.value)}
           disabled={isLoading}
           className="min-h-[100px]"
         />
@@ -114,7 +139,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             Add Experience
           </Button>
         </div>
-        {data.experience.map((exp, index) => (
+        {data.experience.map((exp: any, index: any) => (
           <div key={index} className="space-y-4 border rounded-lg p-4">
             <div className="flex justify-between">
               <h3 className="font-medium">Experience {index + 1}</h3>
@@ -124,7 +149,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onClick={() => {
                   const newExp = [...data.experience];
                   newExp.splice(index, 1);
-                  handleChange('experience', newExp);
+                  handleChange("experience", newExp);
                 }}
               >
                 <Trash2 className="w-4 h-4" />
@@ -137,7 +162,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onChange={(e) => {
                   const newExp = [...data.experience];
                   newExp[index] = { ...exp, title: e.target.value };
-                  handleChange('experience', newExp);
+                  handleChange("experience", newExp);
                 }}
                 disabled={isLoading}
               />
@@ -147,7 +172,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onChange={(e) => {
                   const newExp = [...data.experience];
                   newExp[index] = { ...exp, company: e.target.value };
-                  handleChange('experience', newExp);
+                  handleChange("experience", newExp);
                 }}
                 disabled={isLoading}
               />
@@ -158,7 +183,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                   onChange={(e) => {
                     const newExp = [...data.experience];
                     newExp[index] = { ...exp, startDate: e.target.value };
-                    handleChange('experience', newExp);
+                    handleChange("experience", newExp);
                   }}
                   disabled={isLoading}
                 />
@@ -168,7 +193,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                   onChange={(e) => {
                     const newExp = [...data.experience];
                     newExp[index] = { ...exp, endDate: e.target.value };
-                    handleChange('experience', newExp);
+                    handleChange("experience", newExp);
                   }}
                   disabled={isLoading}
                 />
@@ -178,8 +203,11 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 value={exp.description}
                 onChange={(e) => {
                   const newExp = [...data.experience];
-                  newExp[index] = { ...exp, description: e.target.value.split('\n') };
-                  handleChange('experience', newExp);
+                  newExp[index] = {
+                    ...exp,
+                    description: e.target.value.split("\n"),
+                  };
+                  handleChange("experience", newExp);
                 }}
                 disabled={isLoading}
               />
@@ -196,7 +224,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
             Add Education
           </Button>
         </div>
-        {data.education.map((edu, index) => (
+        {data.education.map((edu: any, index: any) => (
           <div key={index} className="space-y-4 border rounded-lg p-4">
             <div className="flex justify-between">
               <h3 className="font-medium">Education {index + 1}</h3>
@@ -206,7 +234,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onClick={() => {
                   const newEdu = [...data.education];
                   newEdu.splice(index, 1);
-                  handleChange('education', newEdu);
+                  handleChange("education", newEdu);
                 }}
               >
                 <Trash2 className="w-4 h-4" />
@@ -219,7 +247,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onChange={(e) => {
                   const newEdu = [...data.education];
                   newEdu[index] = { ...edu, degree: e.target.value };
-                  handleChange('education', newEdu);
+                  handleChange("education", newEdu);
                 }}
                 disabled={isLoading}
               />
@@ -229,7 +257,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                 onChange={(e) => {
                   const newEdu = [...data.education];
                   newEdu[index] = { ...edu, school: e.target.value };
-                  handleChange('education', newEdu);
+                  handleChange("education", newEdu);
                 }}
                 disabled={isLoading}
               />
@@ -240,7 +268,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                   onChange={(e) => {
                     const newEdu = [...data.education];
                     newEdu[index] = { ...edu, startDate: e.target.value };
-                    handleChange('education', newEdu);
+                    handleChange("education", newEdu);
                   }}
                   disabled={isLoading}
                 />
@@ -250,7 +278,7 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
                   onChange={(e) => {
                     const newEdu = [...data.education];
                     newEdu[index] = { ...edu, endDate: e.target.value };
-                    handleChange('education', newEdu);
+                    handleChange("education", newEdu);
                   }}
                   disabled={isLoading}
                 />
@@ -263,8 +291,13 @@ export function ResumeSection({ data, onChange, isLoading }: ResumeSectionProps)
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Skills</h2>
         <Textarea
-          value={data.skills.join(', ')}
-          onChange={(e) => handleChange('skills', e.target.value.split(',').map(s => s.trim()))}
+          value={data.skills.join(", ")}
+          onChange={(e) =>
+            handleChange(
+              "skills",
+              e.target.value.split(",").map((s) => s.trim())
+            )
+          }
           disabled={isLoading}
           placeholder="Enter skills separated by commas"
         />

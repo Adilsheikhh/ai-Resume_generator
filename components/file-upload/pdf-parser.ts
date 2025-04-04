@@ -27,7 +27,7 @@ export async function parsePDF(file: File): Promise<any> {
 
     // Convert extracted text into structured JSON
     return extractResumeData(extractedText);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error parsing PDF:", error);
     throw new Error(error.message || "Failed to parse the PDF file.");
   }
