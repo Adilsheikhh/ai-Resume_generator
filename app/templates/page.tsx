@@ -122,14 +122,16 @@ export default function TemplatesPage() {
                 <h2 className="text-2xl font-semibold tracking-tight">{category.name}</h2>
                 <p className="text-muted-foreground">{category.description}</p>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {category.templates.map((template) => (
                   <Dialog key={template.id}>
                     <DialogTrigger asChild>
                       <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
-                        <CardContent className="p-6">
+                        <CardContent className="p-4">
                           <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                            <template.component content={sampleData} className="scale-[0.6]" />
+                            <div className="w-full transform scale-[0.45] origin-top">
+                              <template.component content={sampleData} />
+                            </div>
                           </div>
                           <h3 className="text-lg font-semibold mt-4">{template.name}</h3>
                         </CardContent>
@@ -140,9 +142,9 @@ export default function TemplatesPage() {
                         <DialogTitle>{template.name}</DialogTitle>
                         <DialogDescription>Preview of the template</DialogDescription>
                       </DialogHeader>
-                      <div className="p-6">
-                        <div className="border rounded-lg p-4 overflow-auto max-h-[80vh]">
-                          <div className="transform scale-90 origin-top">
+                      <div className="p-4">
+                        <div className="border rounded-lg bg-white overflow-auto max-h-[80vh]">
+                          <div className="transform scale-[0.8] origin-top p-8">
                             <template.component content={sampleData} />
                           </div>
                         </div>
