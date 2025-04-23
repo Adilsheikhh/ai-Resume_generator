@@ -12,6 +12,14 @@ import { ExecutiveTemplate } from "@/components/resume-templates/executive";
 import { CreativeTemplate } from "@/components/resume-templates/creative";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
 import { GradientTemplate } from "@/components/resume-templates/gradient";
+// Placeholder components - replace with actual components
+import { CorporateTemplate } from "@/components/resume-templates/corporate";
+import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
+import { ClassicTemplate } from "@/components/resume-templates/classic";
+import { Modern2Template } from "@/components/resume-templates/modern2";
+import { SimpleTemplate } from "@/components/resume-templates/simple";
+import { CleanTemplate } from "@/components/resume-templates/clean";
+
 
 const sampleData = {
   name: "Charles Bloomberg",
@@ -56,6 +64,9 @@ const categories = [
       { id: "executive", name: "Executive", component: ExecutiveTemplate },
       { id: "professional", name: "Professional", component: ProfessionalTemplate },
       { id: "gradient", name: "Gradient", component: GradientTemplate },
+      { id: "classic", name: "Classic", component: ClassicTemplate }, // Added
+      { id: "simple", name: "Simple", component: SimpleTemplate }, // Added
+
     ],
   },
   {
@@ -65,9 +76,20 @@ const categories = [
     templates: [
       { id: "creative", name: "Creative", component: CreativeTemplate },
       { id: "tech", name: "Tech Stack", component: TechTemplate },
+      { id: "corporate", name: "Corporate", component: CorporateTemplate }, // Added
+      { id: "minimalist", name: "Minimalist", component: MinimalistTemplate }, // Added
+      { id: "modern2", name: "Modern 2", component: Modern2Template }, // Added
+      { id: "clean", name: "Clean", component: CleanTemplate } // Added
+
     ],
   }
 ];
+
+export const metadata = {
+  title: 'Professional Resume Templates | AI Resume Builder',
+  description: 'Choose from our collection of ATS-friendly resume templates. Modern, creative, and professional designs to help you stand out.',
+  keywords: 'resume templates, CV templates, professional resume designs, ATS-friendly templates',
+};
 
 export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -113,7 +135,7 @@ export default function TemplatesPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {category.templates.map((template) => (
                   <Dialog key={template.id}>
-                    <Card 
+                    <Card
                       className="cursor-pointer group hover:border-primary transition-colors"
                       onClick={() => setSelectedTemplate(template.id)}
                     >
@@ -125,7 +147,7 @@ export default function TemplatesPage() {
                         </div>
                         <div className="mt-4 flex items-center justify-between">
                           <h3 className="text-lg font-semibold">{template.name}</h3>
-                          <Link 
+                          <Link
                             href={`/create?template=${template.id}`}
                             className="opacity-0 group-hover:opacity-100 transition-opacity"
                           >
