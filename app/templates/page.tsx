@@ -119,7 +119,7 @@ export default function TemplatesPage() {
                     >
                       <CardContent className="p-4">
                         <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
-                          <div className="w-full transform scale-[0.6] origin-top">
+                          <div className="w-full transform scale-[0.7] origin-top">
                             <template.component content={sampleData} />
                           </div>
                         </div>

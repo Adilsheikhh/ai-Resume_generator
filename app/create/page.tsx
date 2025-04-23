@@ -130,7 +130,7 @@ export default function CreatePage() {
               <div className="p-6">
                 {selectedTemplateData && (
                   <div className="border rounded-lg p-4 bg-white">
-                    <selectedTemplateData.component content={resumeData} />
+                    <selectedTemplateData.component content={sampleData} />
                   </div>
                 )}
               </div>
