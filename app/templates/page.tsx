@@ -129,7 +129,7 @@ export default function TemplatesPage() {
                       <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
                         <CardContent className="p-4">
                           <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                            <div className="w-full transform scale-[0.45] origin-top">
+                            <div className="w-full transform scale-[0.6] origin-top">
                               <template.component content={sampleData} />
                             </div>
                           </div>
@@ -144,7 +144,7 @@ export default function TemplatesPage() {
                       </DialogHeader>
                       <div className="p-4">
                         <div className="border rounded-lg bg-white overflow-auto max-h-[80vh]">
-                          <div className="transform scale-[0.8] origin-top p-8">
+                          <div className="transform scale-[0.9] origin-top p-8">
                             <template.component content={sampleData} />
                           </div>
                         </div>

@@ -97,7 +97,7 @@ export default function CreatePage() {
                       onClick={() => setSelectedTemplate(template.id)}
                     >
                       <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                        <div className="transform scale-[0.4]">
+                        <div className="transform scale-[0.6]">
                           <template.component content={sampleData} />
                         </div>
                       </div>
