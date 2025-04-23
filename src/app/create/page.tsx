@@ -11,6 +11,8 @@ import { TechTemplate } from "@/components/resume-templates/tech";
 import { ExecutiveTemplate } from "@/components/resume-templates/executive";
 import { CreativeTemplate } from "@/components/resume-templates/creative";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
+import { PortfolioTemplate } from "@/components/resume-templates/portfolio"; // Added Portfolio Template
+import { ElegantTemplate } from "@/components/resume-templates/elegant"; // Added Elegant Template
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Dialog,
@@ -93,6 +95,8 @@ const templates = [
   { id: "executive", name: "Executive", component: ExecutiveTemplate },
   { id: "creative", name: "Creative", component: CreativeTemplate },
   { id: "professional", name: "Professional", component: ProfessionalTemplate },
+  { id: "portfolio", name: "Portfolio", component: PortfolioTemplate }, // Added Portfolio Template
+  { id: "elegant", name: "Elegant", component: ElegantTemplate }, // Added Elegant Template
 ];
 
 export default function CreatePage() {
@@ -119,6 +123,7 @@ export default function CreatePage() {
                 <DialogHeader>
                   <DialogTitle>Choose Template</DialogTitle>
                 </DialogHeader>
+                {/*  Template selection UI would go here.  This is missing from the original and the changes provided. */}
               </DialogContent>
             </Dialog>
           </div>
