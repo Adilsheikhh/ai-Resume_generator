@@ -22,7 +22,6 @@ import {
 import { cn } from "@/lib/utils";
 import { ResumeSection } from "@/components/resume-editor/section";
 import { useToast } from "@/components/ui/use-toast";
-import { UploadButton } from "@/components/file-upload/upload-button";
 
 const sampleData = {
   name: "John Doe",
@@ -68,40 +67,8 @@ export default function CreatePage() {
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
   const [resumeData, setResumeData] = useState(sampleData);
   const [showTemplates, setShowTemplates] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
-
-  const handleUpload = async (content: string) => {
-    setIsLoading(true);
-    try {
-      const parsedData = JSON.parse(content);
-      if (!parsedData || typeof parsedData !== 'object') {
-        throw new Error("Invalid resume format");
-      }
-      setResumeData(parsedData);
-      toast({
-        title: "Resume uploaded",
-        description: "Your resume has been successfully parsed.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to parse resume. Ensure it's a valid JSON format.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleUploadError = (error: string) => {
-    toast({
-      title: "Upload Error",
-      description: error,
-      variant: "destructive",
-    });
-  };
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -143,7 +110,6 @@ export default function CreatePage() {
 
           {/* Form fields will go here */}
           <Card className="p-6">
-            <UploadButton onUpload={handleUpload} onError={handleUploadError} />
             <ResumeSection
               title="Personal Information"
               data={resumeData}
