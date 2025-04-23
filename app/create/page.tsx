@@ -81,11 +81,12 @@ export default function CreatePage() {
               <DialogTrigger asChild>
                 <Button variant="outline">Change Template</Button>
               </DialogTrigger>
-              <DialogContent className="max-w-3xl">
+              <DialogContent className="max-w-3xl max-h-[80vh]">
                 <DialogHeader>
                   <DialogTitle>Choose Template</DialogTitle>
                 </DialogHeader>
-                <div className="grid grid-cols-2 gap-4 p-4">
+                <ScrollArea className="h-[60vh]">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
                   {templates.map((template) => (
                     <Card 
                       key={template.id}
@@ -104,6 +105,7 @@ export default function CreatePage() {
                     </Card>
                   ))}
                 </div>
+                </ScrollArea>
               </DialogContent>
             </Dialog>
           </div>
