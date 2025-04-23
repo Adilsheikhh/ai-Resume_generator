@@ -1,16 +1,17 @@
 "use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MinimalTemplate } from "@/components/resume-templates/minimal";
 import { ModernTemplate } from "@/components/resume-templates/modern";
+import { MinimalTemplate } from "@/components/resume-templates/minimal";
 import { TechTemplate } from "@/components/resume-templates/tech";
 import { ExecutiveTemplate } from "@/components/resume-templates/executive";
-import { ProfessionalTemplate } from "@/components/resume-templates/professional";
 import { CreativeTemplate } from "@/components/resume-templates/creative";
+import { ProfessionalTemplate } from "@/components/resume-templates/professional";
+import { GradientTemplate } from "@/components/resume-templates/gradient";
 
 const sampleData = {
   name: "Charles Bloomberg",
@@ -38,52 +39,39 @@ const sampleData = {
       degree: "B.S. Computer Science",
       school: "Stanford University",
       location: "Stanford, CA",
-      startDate: "2012",
-      endDate: "2016"
+      duration: "2012 - 2016"
     }
   ],
   skills: ["JavaScript", "React", "Node.js", "Python", "AWS"]
 };
 
+const categories = [
+  {
+    id: "professional",
+    name: "Professional",
+    description: "Clean and traditional templates suitable for most industries",
+    templates: [
+      { id: "modern", name: "Modern Classic", component: ModernTemplate },
+      { id: "minimal", name: "Minimal", component: MinimalTemplate },
+      { id: "executive", name: "Executive", component: ExecutiveTemplate },
+      { id: "professional", name: "Professional", component: ProfessionalTemplate },
+      { id: "gradient", name: "Gradient", component: GradientTemplate },
+    ],
+  },
+  {
+    id: "creative",
+    name: "Creative",
+    description: "Eye-catching templates for creative professionals",
+    templates: [
+      { id: "creative", name: "Creative", component: CreativeTemplate },
+      { id: "tech", name: "Tech Stack", component: TechTemplate },
+    ],
+  }
+];
+
 export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
-
-  const categories = [
-    {
-      id: "professional",
-      name: "Professional",
-      description: "Clean and traditional templates suitable for most industries",
-      templates: [
-        { id: "modern", name: "Modern Classic", component: ModernTemplate },
-        { id: "minimal", name: "Minimal", component: MinimalTemplate },
-        { id: "executive", name: "Executive", component: ExecutiveTemplate },
-        { id: "professional", name: "Professional", component: ProfessionalTemplate },
-        { id: "corporate", name: "Corporate", component: ModernTemplate },
-        { id: "business", name: "Business", component: ExecutiveTemplate },
-      ],
-    },
-    {
-      id: "technical",
-      name: "Technical",
-      description: "Specialized templates for tech and engineering roles",
-      templates: [
-        { id: "tech", name: "Tech Stack", component: TechTemplate },
-        { id: "developer", name: "Developer", component: TechTemplate },
-        { id: "engineer", name: "Engineer", component: TechTemplate },
-        { id: "creative", name: "Creative", component: CreativeTemplate },
-      ],
-    },
-    {
-      id: "creative",
-      name: "Creative",
-      description: "Eye-catching templates for creative professionals",
-      templates: [
-        { id: "designer", name: "Designer", component: CreativeTemplate },
-        { id: "artist", name: "Artist", component: CreativeTemplate },
-        { id: "portfolio", name: "Portfolio", component: CreativeTemplate },
-      ],
-    }
-  ];
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -125,36 +113,29 @@ export default function TemplatesPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {category.templates.map((template) => (
                   <Dialog key={template.id}>
-                    <DialogTrigger asChild>
-                      <Card className="cursor-pointer hover:bg-muted/50 transition-colors">
-                        <CardContent className="p-4">
-                          <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                            <div className="w-full transform scale-[0.6] origin-top">
-                              <template.component content={sampleData} />
-                            </div>
-                          </div>
-                          <h3 className="text-lg font-semibold mt-4">{template.name}</h3>
-                        </CardContent>
-                      </Card>
-                    </DialogTrigger>
-                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                      <DialogHeader>
-                        <DialogTitle>{template.name}</DialogTitle>
-                        <DialogDescription>Preview of the template</DialogDescription>
-                      </DialogHeader>
-                      <div className="p-4">
-                        <div className="border rounded-lg bg-white overflow-auto max-h-[80vh]">
-                          <div className="transform scale-[0.9] origin-top p-8">
+                    <Card 
+                      className="cursor-pointer group hover:border-primary transition-colors"
+                      onClick={() => setSelectedTemplate(template.id)}
+                    >
+                      <CardContent className="p-4">
+                        <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
+                          <div className="w-full transform scale-[0.6] origin-top">
                             <template.component content={sampleData} />
                           </div>
                         </div>
-                        <div className="mt-4 flex justify-end">
-                          <Link href={`/create?template=${template.id}`} prefetch={false}> {/*Simplified Link*/}
-                            <Button>Use Template</Button>
+                        <div className="mt-4 flex items-center justify-between">
+                          <h3 className="text-lg font-semibold">{template.name}</h3>
+                          <Link 
+                            href={`/create?template=${template.id}`}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Button variant="outline" size="sm">
+                              Use Template
+                            </Button>
                           </Link>
                         </div>
-                      </div>
-                    </DialogContent>
+                      </CardContent>
+                    </Card>
                   </Dialog>
                 ))}
               </div>
