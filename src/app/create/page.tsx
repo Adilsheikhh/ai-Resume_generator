@@ -13,6 +13,7 @@ import { CreativeTemplate } from "@/components/resume-templates/creative";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
 import { PortfolioTemplate } from "@/components/resume-templates/portfolio"; // Added Portfolio Template
 import { ElegantTemplate } from "@/components/resume-templates/elegant"; // Added Elegant Template
+import { GradientTemplate } from "@/components/resume-templates/gradient"; // Added Gradient Template import
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Dialog,
@@ -97,6 +98,7 @@ const templates = [
   { id: "professional", name: "Professional", component: ProfessionalTemplate },
   { id: "portfolio", name: "Portfolio", component: PortfolioTemplate }, // Added Portfolio Template
   { id: "elegant", name: "Elegant", component: ElegantTemplate }, // Added Elegant Template
+  { id: "gradient", name: "Gradient", component: GradientTemplate }, // Added Gradient Template
 ];
 
 export default function CreatePage() {
