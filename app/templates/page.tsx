@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ModernTemplate } from "@/components/resume-templates/modern";
@@ -12,14 +13,9 @@ import { ExecutiveTemplate } from "@/components/resume-templates/executive";
 import { CreativeTemplate } from "@/components/resume-templates/creative";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
 import { GradientTemplate } from "@/components/resume-templates/gradient";
-// Placeholder components - replace with actual components
 import { CorporateTemplate } from "@/components/resume-templates/corporate";
 import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
 import { ClassicTemplate } from "@/components/resume-templates/classic";
-import { Modern2Template } from "@/components/resume-templates/modern2";
-import { SimpleTemplate } from "@/components/resume-templates/simple";
-import { CleanTemplate } from "@/components/resume-templates/clean";
-
 
 const sampleData = {
   name: "Charles Bloomberg",
@@ -64,9 +60,7 @@ const categories = [
       { id: "executive", name: "Executive", component: ExecutiveTemplate },
       { id: "professional", name: "Professional", component: ProfessionalTemplate },
       { id: "gradient", name: "Gradient", component: GradientTemplate },
-      { id: "classic", name: "Classic", component: ClassicTemplate }, // Added
-      { id: "simple", name: "Simple", component: SimpleTemplate }, // Added
-
+      { id: "classic", name: "Classic", component: ClassicTemplate },
     ],
   },
   {
@@ -76,16 +70,11 @@ const categories = [
     templates: [
       { id: "creative", name: "Creative", component: CreativeTemplate },
       { id: "tech", name: "Tech Stack", component: TechTemplate },
-      { id: "corporate", name: "Corporate", component: CorporateTemplate }, // Added
-      { id: "minimalist", name: "Minimalist", component: MinimalistTemplate }, // Added
-      { id: "modern2", name: "Modern 2", component: Modern2Template }, // Added
-      { id: "clean", name: "Clean", component: CleanTemplate } // Added
-
+      { id: "corporate", name: "Corporate", component: CorporateTemplate },
+      { id: "minimalist", name: "Minimalist", component: MinimalistTemplate },
     ],
   }
 ];
-
-
 
 export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState("all");
