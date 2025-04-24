@@ -11,6 +11,12 @@ import { TechTemplate } from "@/components/resume-templates/tech";
 import { ExecutiveTemplate } from "@/components/resume-templates/executive";
 import { CreativeTemplate } from "@/components/resume-templates/creative";
 import { ProfessionalTemplate } from "@/components/resume-templates/professional";
+import { GradientTemplate } from "@/components/resume-templates/gradient";
+import { CorporateTemplate } from "@/components/resume-templates/corporate";
+import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
+import { ClassicTemplate } from "@/components/resume-templates/classic";
+import { ModernPlusTemplate } from "@/components/resume-templates/modern-plus";
+import { VibrantTemplate } from "@/components/resume-templates/vibrant";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Dialog,
@@ -25,6 +31,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Download } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import axios from 'axios';
 
 const sampleData = {
   name: "John Doe",
@@ -49,7 +56,8 @@ const sampleData = {
       school: "Stanford University",
       location: "Stanford, CA",
       startDate: "2012",
-      endDate: "2016"
+      endDate: "2016",
+      duration: "2012 - 2016"
     }
   ],
   skills: ["JavaScript", "React", "Node.js", "Python", "AWS"]
@@ -62,6 +70,12 @@ const templates = [
   { id: "executive", name: "Executive", component: ExecutiveTemplate },
   { id: "creative", name: "Creative", component: CreativeTemplate },
   { id: "professional", name: "Professional", component: ProfessionalTemplate },
+  { id: "gradient", name: "Gradient", component: GradientTemplate },
+  { id: "corporate", name: "Corporate", component: CorporateTemplate },
+  { id: "minimalist", name: "Minimalist", component: MinimalistTemplate },
+  { id: "classic", name: "Classic", component: ClassicTemplate },
+  { id: "modern-plus", name: "Modern Plus", component: ModernPlusTemplate },
+  { id: "vibrant", name: "Vibrant", component: VibrantTemplate },
 ];
 
 export default function CreatePage() {
@@ -69,7 +83,7 @@ export default function CreatePage() {
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
   const [resumeData, setResumeData] = useState(sampleData);
-  const resumeRef = useRef(null);
+  const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
@@ -86,7 +100,7 @@ export default function CreatePage() {
       
       // Create a clone of the resume element for manipulation
       const resumeElement = resumeRef.current;
-      const clone = resumeElement.cloneNode(true);
+      const clone = resumeElement.cloneNode(true) as HTMLElement;
       
       // Create a wrapper with A4 dimensions (210mm x 297mm at 96 DPI)
       const wrapper = document.createElement('div');
@@ -165,6 +179,34 @@ export default function CreatePage() {
     }
   };
 
+  const handleEnhanceWithAI = async () => {
+    try {
+      toast({
+        title: "Enhancing your resume...",
+        description: "Please wait while we enhance your resume content using AI.",
+      });
+
+      const response = await axios.post('/api/enhance-resume', { resume: resumeData });
+
+      if (response.data && response.data.enhancedResume) {
+        setResumeData(response.data.enhancedResume);
+        toast({
+          title: "Enhancement complete!",
+          description: "Your resume content has been successfully enhanced.",
+        });
+      } else {
+        throw new Error("Invalid response from AI service");
+      }
+    } catch (error) {
+      console.error("Error enhancing resume:", error);
+      toast({
+        title: "Enhancement failed",
+        description: "There was an error enhancing your resume. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="container mx-auto py-6 px-4">
       <div className="flex flex-col lg:flex-row gap-6">
@@ -172,43 +214,45 @@ export default function CreatePage() {
         <div className="w-full lg:w-1/2 space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Create Resume</h1>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="outline">Change Template</Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[80vh]">
-                <DialogHeader>
-                  <DialogTitle>Choose Template</DialogTitle>
-                </DialogHeader>
-                <ScrollArea className="h-[60vh]">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
-                  {templates.map((template) => (
-                    <Card 
-                      key={template.id}
-                      className={cn(
-                        "cursor-pointer hover:bg-muted/50 transition-colors p-4",
-                        selectedTemplate === template.id && "border-primary"
-                      )}
-                      onClick={() => setSelectedTemplate(template.id)}
-                    >
-                      <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                        <div className="transform scale-[0.6]">
-                          <template.component content={sampleData} />
+            <div className="flex gap-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline">Change Template</Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl max-h-[80vh]">
+                  <DialogHeader>
+                    <DialogTitle>Choose Template</DialogTitle>
+                  </DialogHeader>
+                  <ScrollArea className="h-[60vh]">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                    {templates.map((template) => (
+                      <Card 
+                        key={template.id}
+                        className={cn(
+                          "cursor-pointer hover:bg-muted/50 transition-colors p-4",
+                          selectedTemplate === template.id && "border-primary"
+                        )}
+                        onClick={() => setSelectedTemplate(template.id)}
+                      >
+                        <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
+                          <div className="transform scale-[0.6]">
+                            <template.component content={sampleData} />
+                          </div>
                         </div>
-                      </div>
-                      <h3 className="text-sm font-medium mt-2 text-center">{template.name}</h3>
-                    </Card>
-                  ))}
-                </div>
-                </ScrollArea>
-              </DialogContent>
-            </Dialog>
+                        <h3 className="text-sm font-medium mt-2 text-center">{template.name}</h3>
+                      </Card>
+                    ))}
+                  </div>
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" onClick={handleEnhanceWithAI}>Enhance with AI</Button>
+            </div>
           </div>
 
           {/* Form fields */}
           <Card className="p-6">
             <ResumeSection
-              title="Personal Information"
               data={resumeData}
               onChange={setResumeData}
             />

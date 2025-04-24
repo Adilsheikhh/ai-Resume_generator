@@ -16,11 +16,11 @@ interface ResumeSectionProps {
 
 export function ResumeSection({
   data,
-  onChange,
+  onChange: onChangeAction,
   isLoading,
 }: ResumeSectionProps) {
   const handleChange = (section: string, value: any) => {
-    onChange({
+    onChangeAction({
       ...data,
       [section]: value,
     });
