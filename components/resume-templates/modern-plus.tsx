@@ -1,8 +1,9 @@
 
 import { ResumeData } from '@/lib/types';
-
+import { TemplateWrapper } from "./TemplateWrapper";
 export function ModernPlusTemplate({ content }: { content: ResumeData }) {
   return (
+    <TemplateWrapper>
     <div className="max-w-[850px] mx-auto p-8 bg-white text-gray-800">
       <header className="border-b-2 border-primary pb-4 mb-6">
         <h1 className="text-4xl font-bold text-primary">{content.name}</h1>
@@ -61,5 +62,6 @@ export function ModernPlusTemplate({ content }: { content: ResumeData }) {
         </div>
       </section>
     </div>
+    </TemplateWrapper>
   );
 }

@@ -17,10 +17,10 @@ export default function Home() {
           <div className="mx-auto max-w-7xl text-center">
             <div className="mx-auto max-w-2xl">
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-                Create Professional Resumes with AI
+                Create Professional Resumes with A-I
               </h1>
               <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                Build ATS-friendly resumes in minutes. Let AI enhance your career story and help you land your dream job.
+                Build ATS-friendly resumes in minutes. Let A-I enhance your career story and help you land your dream job.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
                 <Link href="/create">

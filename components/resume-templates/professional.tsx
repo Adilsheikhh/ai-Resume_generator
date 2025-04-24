@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-
+import { TemplateWrapper } from "./TemplateWrapper";
 interface ProfessionalTemplateProps {
   content: {
     name: string;
@@ -29,6 +29,7 @@ interface ProfessionalTemplateProps {
 
 export function ProfessionalTemplate({ content, className }: ProfessionalTemplateProps) {
   return (
+    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-8 bg-white", className)}>
       <header className="border-b-2 border-primary pb-4 mb-6">
         <h1 className="text-4xl font-bold mb-2">{content.name}</h1>
@@ -103,5 +104,6 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
         </div>
       </section>
     </div>
+    </TemplateWrapper>
   );
 }

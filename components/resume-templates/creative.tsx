@@ -1,13 +1,15 @@
 
 import { FC } from 'react';
-import { ResumeData } from '@/types/resume';
-
+import { ResumeData } from "@/lib/types";
+import { TemplateWrapper } from "./TemplateWrapper";
 interface CreativeTemplateProps {
   content: ResumeData;
 }
 
 export const CreativeTemplate: FC<CreativeTemplateProps> = ({ content }) => {
   return (
+    <TemplateWrapper>
+      {/* Main container for the resume */}
     <div className="min-h-[297mm] w-full bg-white shadow-lg">
       <div className="relative">
         {/* Header with diagonal design */}
@@ -78,5 +80,6 @@ export const CreativeTemplate: FC<CreativeTemplateProps> = ({ content }) => {
         </div>
       </div>
     </div>
+    </TemplateWrapper>
   );
 };

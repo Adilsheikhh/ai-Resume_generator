@@ -16,6 +16,7 @@ import { GradientTemplate } from "@/components/resume-templates/gradient";
 import { CorporateTemplate } from "@/components/resume-templates/corporate";
 import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
 import { ClassicTemplate } from "@/components/resume-templates/classic";
+import { ModernPlusTemplate } from "@/components/resume-templates/modern-plus";
 
 const sampleData = {
   name: "Charles Bloomberg",
@@ -61,6 +62,7 @@ const categories = [
       { id: "professional", name: "Professional", component: ProfessionalTemplate },
       { id: "gradient", name: "Gradient", component: GradientTemplate },
       { id: "classic", name: "Classic", component: ClassicTemplate },
+      { id: "modern-plus", name: "Modern Plus", component: ModernPlusTemplate },
     ],
   },
   {

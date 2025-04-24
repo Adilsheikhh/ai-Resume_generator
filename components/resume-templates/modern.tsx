@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { TemplateWrapper } from "./TemplateWrapper";
 
 interface ModernTemplateProps {
   content: {
@@ -29,6 +30,7 @@ interface ModernTemplateProps {
 
 export function ModernTemplate({ content, className }: ModernTemplateProps) {
   return (
+    <TemplateWrapper >
     <div className={cn("max-w-[850px] mx-auto p-8 bg-white text-gray-800 scale-100", className)}>
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold mb-2">{content.name}</h1>
@@ -92,5 +94,6 @@ export function ModernTemplate({ content, className }: ModernTemplateProps) {
         </div>
       </section>
     </div>
+    </TemplateWrapper>
   );
 }

@@ -1,7 +1,9 @@
 import { ResumeData } from '@/lib/types';
+import { TemplateWrapper } from "./TemplateWrapper";
 
 export function ExecutiveTemplate({ content }: { content: ResumeData }) {
   return (
+    <TemplateWrapper>
     <div className="max-w-[850px] mx-auto p-8 bg-white text-gray-800 font-serif">
       <header className="mb-8 border-b-2 border-gray-800 pb-4">
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 text-center uppercase">{content.name}</h1>
@@ -66,5 +68,6 @@ export function ExecutiveTemplate({ content }: { content: ResumeData }) {
         </div>
       </section>
     </div>
+    </TemplateWrapper>
   );
 }

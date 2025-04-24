@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,6 +22,9 @@ import {
 import { cn } from "@/lib/utils";
 import { ResumeSection } from "@/components/resume-editor/section";
 import { useToast } from "@/components/ui/use-toast";
+import { Download } from "lucide-react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 const sampleData = {
   name: "John Doe",
@@ -66,9 +69,101 @@ export default function CreatePage() {
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
   const [resumeData, setResumeData] = useState(sampleData);
-  const [showTemplates, setShowTemplates] = useState(false);
+  const resumeRef = useRef(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
+
+  const handleDownload = async () => {
+    if (!resumeRef.current) return;
+    
+    try {
+      setIsDownloading(true);
+      toast({
+        title: "Preparing download...",
+        description: "Please wait while we generate your resume PDF.",
+      });
+      
+      // Create a clone of the resume element for manipulation
+      const resumeElement = resumeRef.current;
+      const clone = resumeElement.cloneNode(true);
+      
+      // Create a wrapper with A4 dimensions (210mm x 297mm at 96 DPI)
+      const wrapper = document.createElement('div');
+      wrapper.style.width = '794px'; // A4 width at 96 DPI
+      wrapper.style.position = 'absolute';
+      wrapper.style.top = '0';
+      wrapper.style.left = '0';
+      wrapper.style.padding = '40px';
+      wrapper.style.backgroundColor = 'white';
+      wrapper.style.boxSizing = 'border-box';
+      
+      // Adjust the clone to fit A4 proportions
+      clone.style.transform = 'none';
+      clone.style.width = '100%';
+      clone.style.height = 'auto';
+      clone.style.margin = '0';
+      clone.style.boxShadow = 'none';
+      clone.style.border = 'none';
+      
+      // Append the clone to the wrapper and the wrapper to the body
+      wrapper.appendChild(clone);
+      document.body.appendChild(wrapper);
+      
+      // Capture the canvas
+      const canvas = await html2canvas(wrapper, {
+        scale: 2, // Higher scale for better quality
+        useCORS: true,
+        allowTaint: true,
+        backgroundColor: "#ffffff",
+        windowWidth: wrapper.offsetWidth,
+        windowHeight: wrapper.offsetHeight,
+      });
+      
+      // Remove the wrapper after capturing
+      document.body.removeChild(wrapper);
+      
+      // Create PDF with proper A4 dimensions
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
+      
+      // Calculate the aspect ratio
+      const imgWidth = canvas.width;
+      const imgHeight = canvas.height;
+      const ratio = imgWidth / imgHeight;
+      
+      // Use full width of the PDF and calculate height based on aspect ratio
+      const scaledWidth = pdfWidth;
+      const scaledHeight = pdfWidth / ratio;
+      
+      // Add image to PDF, centered if needed
+      pdf.addImage(imgData, 'JPEG', 0, 0, scaledWidth, scaledHeight);
+      
+      // Save the PDF with the user's name
+      pdf.save(`${resumeData.name.replace(/\s+/g, '_')}_resume.pdf`);
+      
+      toast({
+        title: "Download complete!",
+        description: "Your resume has been downloaded successfully.",
+      });
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast({
+        title: "Download failed",
+        description: "There was an error generating your resume PDF. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <div className="container mx-auto py-6 px-4">
@@ -110,7 +205,7 @@ export default function CreatePage() {
             </Dialog>
           </div>
 
-          {/* Form fields will go here */}
+          {/* Form fields */}
           <Card className="p-6">
             <ResumeSection
               title="Personal Information"
@@ -123,14 +218,30 @@ export default function CreatePage() {
         {/* Right Panel - Preview */}
         <div className="w-full lg:w-1/2">
           <Card className="sticky top-6">
-            <div className="p-4 border-b">
+            <div className="p-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-semibold">Preview</h2>
+              <Button 
+                variant="outline" 
+                className="gap-2"
+                onClick={handleDownload}
+                disabled={isDownloading}
+              >
+                <Download className="h-4 w-4" />
+                {isDownloading ? "Generating..." : "Download PDF"}
+              </Button>
             </div>
             <ScrollArea className="h-[800px]">
               <div className="p-6">
                 {selectedTemplateData && (
-                  <div className="border rounded-lg p-4 bg-white">
-                    <selectedTemplateData.component content={sampleData} />
+                  <div 
+                    className="border rounded-lg p-4 bg-white print:border-none print:shadow-none"
+                    ref={resumeRef}
+                    style={{
+                      aspectRatio: "210/297", // A4 aspect ratio
+                      maxWidth: "100%",
+                    }}
+                  >
+                    <selectedTemplateData.component content={resumeData} />
                   </div>
                 )}
               </div>

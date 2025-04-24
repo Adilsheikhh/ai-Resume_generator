@@ -1,8 +1,10 @@
 
 import { ResumeData } from '@/lib/types';
-
+import { TemplateWrapper } from "./TemplateWrapper";
 export function ClassicTemplate({ content }: { content: ResumeData }) {
   return (
+    <TemplateWrapper>
+      
     <div className="max-w-[850px] mx-auto p-8 bg-white text-gray-800 font-serif">
       <header className="text-center mb-8">
         <h1 className="text-3xl font-bold uppercase tracking-wide">{content.name}</h1>
@@ -63,5 +65,6 @@ export function ClassicTemplate({ content }: { content: ResumeData }) {
         </div>
       </section>
     </div>
+    </TemplateWrapper>
   );
 }
