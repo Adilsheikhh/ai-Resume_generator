@@ -26,6 +26,7 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { ResumeData } from "@/lib/types";
 import { ResumeSection } from "@/components/resume-editor/section";
 import { useToast } from "@/components/ui/use-toast";
 import { Download, Sparkles } from "lucide-react";
@@ -107,6 +108,23 @@ const CreatePageContent = () => {
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
+
+  // Create a wrapper function to handle the type conversion
+  const handleResumeDataChange = (data: ResumeData) => {
+    setResumeData({
+      ...data,
+      // Ensure optional fields are always defined with the expected structure
+      projects: data.projects?.map(project => ({
+        ...project,
+        link: project.link || "", // Ensure link is always a string
+        duration: project.duration || "" // Ensure duration is always a string
+      })) || [],
+      links: data.links?.map(link => ({
+        ...link,
+        description: link.description || "" // Ensure description is always a string
+      })) || []
+    });
+  };
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
 
@@ -326,7 +344,8 @@ const CreatePageContent = () => {
           <Card className="p-6">
             <ResumeSection
               data={resumeData}
-              onChangeAction={setResumeData}
+              onChangeAction={handleResumeDataChange}
+              isLoading={isEnhancing}
             />
           </Card>
         </div>

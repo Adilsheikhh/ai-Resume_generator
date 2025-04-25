@@ -30,7 +30,16 @@ export function ResumeSection({
     await updateResumeData(updatedData);
     
     // Then update the local state via the callback
-    onChangeAction(updatedData);
+    handleDataChange(updatedData);
+  };
+
+  const handleDataChange = (updatedData: ResumeData) => {
+    onChangeAction({
+      ...updatedData,
+      // Ensure optional fields are handled properly
+      projects: updatedData.projects || [],
+      links: updatedData.links || []
+    });
   };
 
   const addExperience = () => {
