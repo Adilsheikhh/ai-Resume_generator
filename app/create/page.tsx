@@ -104,26 +104,14 @@ const CreatePageContent = () => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
-  const [resumeData, setResumeData] = useState(sampleData);
+  const [resumeData, setResumeData] = useState<ResumeData>(sampleData);
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
 
   // Create a wrapper function to handle the type conversion
   const handleResumeDataChange = (data: ResumeData) => {
-    setResumeData({
-      ...data,
-      // Ensure optional fields are always defined with the expected structure
-      projects: data.projects?.map(project => ({
-        ...project,
-        link: project.link || "", // Ensure link is always a string
-        duration: project.duration || "" // Ensure duration is always a string
-      })) || [],
-      links: data.links?.map(link => ({
-        ...link,
-        description: link.description || "" // Ensure description is always a string
-      })) || []
-    });
+    setResumeData(data);
   };
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
