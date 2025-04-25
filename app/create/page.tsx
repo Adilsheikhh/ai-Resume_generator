@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, Suspense } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -28,7 +28,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ResumeSection } from "@/components/resume-editor/section";
 import { useToast } from "@/components/ui/use-toast";
-import { Download } from "lucide-react";
+import { Download, Sparkles } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from 'axios';
@@ -78,13 +78,14 @@ const templates = [
   { id: "vibrant", name: "Vibrant", component: VibrantTemplate },
 ];
 
-export default function CreatePage() {
+const CreatePageContent = () => {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
   const [resumeData, setResumeData] = useState(sampleData);
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
 
@@ -97,6 +98,23 @@ export default function CreatePage() {
         title: "Preparing download...",
         description: "Please wait while we generate your resume PDF.",
       });
+      
+      // Apply print-specific styles to ensure colors and content render correctly
+      const style = document.createElement('style');
+      style.innerHTML = `
+        @media print {
+          body, html {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            color-adjust: exact !important;
+          }
+          * {
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+        }
+      `;
+      document.head.appendChild(style);
       
       // Create a clone of the resume element for manipulation
       const resumeElement = resumeRef.current;
@@ -111,6 +129,8 @@ export default function CreatePage() {
       wrapper.style.padding = '40px';
       wrapper.style.backgroundColor = 'white';
       wrapper.style.boxSizing = 'border-box';
+      wrapper.style.colorAdjust = 'exact';
+      wrapper.style.WebkitPrintColorAdjust = 'exact';
       
       // Adjust the clone to fit A4 proportions
       clone.style.transform = 'none';
@@ -120,22 +140,42 @@ export default function CreatePage() {
       clone.style.boxShadow = 'none';
       clone.style.border = 'none';
       
+      // Ensure font colors are preserved
+      const allTextElements = clone.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, li, a, div');
+      allTextElements.forEach(el => {
+        const element = el as HTMLElement;
+        if (element.style.color) {
+          element.style.colorAdjust = 'exact';
+          element.style.WebkitPrintColorAdjust = 'exact';
+        }
+      });
+      
       // Append the clone to the wrapper and the wrapper to the body
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
       
-      // Capture the canvas
+      // Capture the canvas with appropriate settings
       const canvas = await html2canvas(wrapper, {
-        scale: 2, // Higher scale for better quality
+        scale: 3, // Higher scale for better quality
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
+        logging: false,
         windowWidth: wrapper.offsetWidth,
         windowHeight: wrapper.offsetHeight,
+        onclone: (clonedDoc) => {
+          // Additional styles for the cloned document
+          const clonedElement = clonedDoc.body.querySelector('[ref="resumeRef"]') as HTMLElement;
+          if (clonedElement) {
+            clonedElement.style.colorAdjust = 'exact';
+            clonedElement.style.WebkitPrintColorAdjust = 'exact';
+          }
+        }
       });
       
       // Remove the wrapper after capturing
       document.body.removeChild(wrapper);
+      document.head.removeChild(style);
       
       // Create PDF with proper A4 dimensions
       const imgData = canvas.toDataURL('image/jpeg', 1.0);
@@ -143,6 +183,7 @@ export default function CreatePage() {
         orientation: 'portrait',
         unit: 'mm',
         format: 'a4',
+        compress: true,
       });
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -157,7 +198,7 @@ export default function CreatePage() {
       const scaledWidth = pdfWidth;
       const scaledHeight = pdfWidth / ratio;
       
-      // Add image to PDF, centered if needed
+      // Add image to PDF with proper positioning
       pdf.addImage(imgData, 'JPEG', 0, 0, scaledWidth, scaledHeight);
       
       // Save the PDF with the user's name
@@ -181,6 +222,7 @@ export default function CreatePage() {
 
   const handleEnhanceWithAI = async () => {
     try {
+      setIsEnhancing(true);
       toast({
         title: "Enhancing your resume...",
         description: "Please wait while we enhance your resume content using AI.",
@@ -204,6 +246,8 @@ export default function CreatePage() {
         description: "There was an error enhancing your resume. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsEnhancing(false);
     }
   };
 
@@ -246,7 +290,9 @@ export default function CreatePage() {
                   </ScrollArea>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" onClick={handleEnhanceWithAI}>Enhance with AI</Button>
+              <Button variant="outline" onClick={handleEnhanceWithAI} disabled={isEnhancing}>
+                {isEnhancing ? "Enhancing..." : "Enhance with AI"}
+              </Button>
             </div>
           </div>
 
@@ -254,7 +300,7 @@ export default function CreatePage() {
           <Card className="p-6">
             <ResumeSection
               data={resumeData}
-              onChange={setResumeData}
+              onChangeAction={setResumeData}
             />
           </Card>
         </div>
@@ -275,16 +321,32 @@ export default function CreatePage() {
               </Button>
             </div>
             <ScrollArea className="h-[800px]">
-              <div className="p-6">
+              <div className="p-6 relative">
                 {selectedTemplateData && (
                   <div 
-                    className="border rounded-lg p-4 bg-white print:border-none print:shadow-none"
+                    className="border rounded-lg p-4 bg-white print:border-none print:shadow-none relative"
                     ref={resumeRef}
                     style={{
                       aspectRatio: "210/297", // A4 aspect ratio
                       maxWidth: "100%",
                     }}
                   >
+                    {isEnhancing && (
+                      <div className="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+                        <div className="animate-pulse flex flex-col items-center gap-2">
+                          <div className="relative">
+                            <Sparkles className="h-12 w-12 text-primary animate-spin" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="h-4 w-4 rounded-full bg-primary animate-ping" />
+                            </div>
+                          </div>
+                          <p className="text-xl font-medium text-primary animate-pulse">Enhancing Resume...</p>
+                          <p className="text-sm text-muted-foreground text-center max-w-xs">
+                            Our AI is working to improve your resume's language and formatting for better results
+                          </p>
+                        </div>
+                      </div>
+                    )}
                     <selectedTemplateData.component content={resumeData} />
                   </div>
                 )}
@@ -294,5 +356,13 @@ export default function CreatePage() {
         </div>
       </div>
     </div>
+  );
+};
+
+export default function CreatePage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreatePageContent />
+    </Suspense>
   );
 }

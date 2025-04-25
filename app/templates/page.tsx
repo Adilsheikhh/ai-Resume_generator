@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -18,36 +17,38 @@ import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
 import { ClassicTemplate } from "@/components/resume-templates/classic";
 import { ModernPlusTemplate } from "@/components/resume-templates/modern-plus";
 
+// Updated the `sampleData` object to include `startDate` and `endDate` fields in the `education` property
 const sampleData = {
-  name: "Charles Bloomberg",
-  title: "Senior Software Engineer",
+  name: "John Doe",
+  title: "Software Engineer",
   contact: {
-    email: "charles.bloomberg@example.com",
-    phone: "(555) 123-4567",
-    location: "San Francisco, CA"
+    email: "johndoe@example.com",
+    phone: "123-456-7890",
+    location: "San Francisco, CA",
   },
-  summary: "Experienced software engineer with expertise in full-stack development",
+  summary: "Experienced software engineer with a passion for developing innovative programs that expedite the efficiency and effectiveness of organizational success.",
   experience: [
     {
-      position: "Senior Software Engineer",
-      company: "Tech Corp",
-      duration: "2020 - Present",
+      position: "Frontend Developer",
+      company: "Tech Solutions Inc.",
+      duration: "Jan 2020 - Present",
       description: [
-        "Led development of cloud-based solutions",
-        "Managed team of 5 engineers",
-        "Implemented CI/CD pipelines"
-      ]
-    }
+        "Developed and maintained code for client websites primarily using HTML, CSS, Sass, JavaScript, and jQuery.",
+        "Manually tested sites in various browsers and mobile devices to ensure cross-browser compatibility and responsiveness.",
+      ],
+    },
   ],
   education: [
     {
-      degree: "B.S. Computer Science",
-      school: "Stanford University",
-      location: "Stanford, CA",
-      duration: "2012 - 2016"
-    }
+      degree: "Bachelor of Science in Computer Science",
+      school: "University of California, Berkeley",
+      location: "Berkeley, CA",
+      startDate: "Aug 2015",
+      endDate: "May 2019",
+      duration: "4 years",
+    },
   ],
-  skills: ["JavaScript", "React", "Node.js", "Python", "AWS"]
+  skills: ["JavaScript", "React", "Node.js", "CSS", "HTML"],
 };
 
 const categories = [

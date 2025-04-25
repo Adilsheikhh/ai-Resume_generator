@@ -3,8 +3,28 @@ import { Providers } from '@/components/providers';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+// Primary font with fallback options
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  fallback: [
+    'system-ui',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Segoe UI',
+    'Roboto',
+    'Helvetica Neue',
+    'Arial',
+    'sans-serif'
+  ],
+  preload: true,
+  variable: '--font-inter',
+});
 
+// Define system font fallbacks
+const systemFontClass = 'font-system';
+
+// Metadata must be in a Server Component, so we keep it here
 export const metadata = {
   title: 'AI Resume Builder - Create Professional Resumes in Minutes',
   description: 'Create ATS-friendly resumes with our AI-powered resume builder. Choose from multiple professional templates and get expert suggestions to land your dream job.',
@@ -27,7 +47,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.variable}`}>
         <Providers>
           {children}
           <Toaster />

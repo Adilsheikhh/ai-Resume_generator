@@ -7,34 +7,40 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Trash2 } from "lucide-react";
 import { ResumeData } from "@/lib/types";
+import { updateResumeData } from "@/app/actions";
 
 interface ResumeSectionProps {
   data: ResumeData;
-  onChange: (data: ResumeData) => void;
+  onChangeAction: (data: ResumeData) => void; // Renamed to onChangeAction
   isLoading?: boolean;
 }
 
 export function ResumeSection({
   data,
-  onChange: onChangeAction,
+  onChangeAction,
   isLoading,
 }: ResumeSectionProps) {
-  const handleChange = (section: string, value: any) => {
-    onChangeAction({
+  const handleChange = async (section: string, value: any) => {
+    const updatedData = {
       ...data,
       [section]: value,
-    });
+    };
+    
+    // Call the server action
+    await updateResumeData(updatedData);
+    
+    // Then update the local state via the callback
+    onChangeAction(updatedData);
   };
 
   const addExperience = () => {
     handleChange("experience", [
       ...data.experience,
       {
-        title: "",
+        position: "",
         company: "",
         location: "",
-        startDate: "",
-        endDate: "",
+        duration: "",
         description: [],
       },
     ]);
@@ -157,18 +163,18 @@ export function ResumeSection({
             </div>
             <div className="grid gap-4">
               <Input
-                placeholder="Job Title"
-                value={exp.title}
+                placeholder="Job Position"
+                value={exp.position || ""}
                 onChange={(e) => {
                   const newExp = [...data.experience];
-                  newExp[index] = { ...exp, title: e.target.value };
+                  newExp[index] = { ...exp, position: e.target.value };
                   handleChange("experience", newExp);
                 }}
                 disabled={isLoading}
               />
               <Input
                 placeholder="Company"
-                value={exp.company}
+                value={exp.company || ""}
                 onChange={(e) => {
                   const newExp = [...data.experience];
                   newExp[index] = { ...exp, company: e.target.value };
@@ -176,31 +182,19 @@ export function ResumeSection({
                 }}
                 disabled={isLoading}
               />
-              <div className="grid grid-cols-2 gap-4">
-                <Input
-                  placeholder="Start Date"
-                  value={exp.startDate}
-                  onChange={(e) => {
-                    const newExp = [...data.experience];
-                    newExp[index] = { ...exp, startDate: e.target.value };
-                    handleChange("experience", newExp);
-                  }}
-                  disabled={isLoading}
-                />
-                <Input
-                  placeholder="End Date"
-                  value={exp.endDate}
-                  onChange={(e) => {
-                    const newExp = [...data.experience];
-                    newExp[index] = { ...exp, endDate: e.target.value };
-                    handleChange("experience", newExp);
-                  }}
-                  disabled={isLoading}
-                />
-              </div>
+              <Input
+                placeholder="Duration (e.g., 2020 - Present)"
+                value={exp.duration || ""}
+                onChange={(e) => {
+                  const newExp = [...data.experience];
+                  newExp[index] = { ...exp, duration: e.target.value };
+                  handleChange("experience", newExp);
+                }}
+                disabled={isLoading}
+              />
               <Textarea
-                placeholder="Description"
-                value={exp.description}
+                placeholder="Description (each line will be a bullet point)"
+                value={Array.isArray(exp.description) ? exp.description.join("\n") : ""}
                 onChange={(e) => {
                   const newExp = [...data.experience];
                   newExp[index] = {
