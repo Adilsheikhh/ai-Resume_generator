@@ -1,9 +1,7 @@
 import { ResumeData } from '@/lib/types';
-import { TemplateWrapper } from "./TemplateWrapper";
 
 export function MinimalistTemplate({ content }: { content: ResumeData }) {
   return (
-    <TemplateWrapper>
     <div className="max-w-[850px] mx-auto bg-white p-8 font-light">
       <header className="mb-8">
         <h1 className="text-5xl font-light tracking-wide mb-2">{content.name}</h1>
@@ -105,6 +103,5 @@ export function MinimalistTemplate({ content }: { content: ResumeData }) {
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }

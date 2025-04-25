@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { TemplateWrapper } from "./TemplateWrapper";
 import { ResumeData } from '@/lib/types';
 
 interface ProfessionalTemplateProps {
@@ -13,7 +12,6 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
   const primaryColor = '#000000';
   
   return (
-    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-4 sm:p-6 md:p-8 bg-white", className)}>
       <header className="border-b-2 pb-3 sm:pb-4 mb-4 sm:mb-6" style={{ borderColor: primaryColor }}>
         <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ color: '#111827' }}>{content.name}</h1>
@@ -154,6 +152,5 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }

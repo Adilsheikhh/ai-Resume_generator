@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import { ResumeData } from "@/lib/types";
-import { TemplateWrapper } from "./TemplateWrapper";
 
 interface ElegantTemplateProps {
   content: ResumeData;
@@ -9,7 +8,6 @@ interface ElegantTemplateProps {
 
 export function ElegantTemplate({ content, className }: ElegantTemplateProps) {
   return (
-    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-8 bg-stone-50", className)}>
       <header className="border-b-2 border-stone-300 pb-6 mb-8">
         <h1 className="text-4xl font-serif text-stone-900 mb-2">{content.name}</h1>
@@ -124,6 +122,5 @@ export function ElegantTemplate({ content, className }: ElegantTemplateProps) {
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }

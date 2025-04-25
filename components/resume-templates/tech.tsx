@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { TemplateWrapper } from "./TemplateWrapper";
 import { ResumeData } from "@/lib/types";
 
 interface TechTemplateProps {
@@ -9,7 +8,6 @@ interface TechTemplateProps {
 
 export function TechTemplate({ content, className }: TechTemplateProps) {
   return (
-    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-8 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-800", className)}>
       <header className="mb-8">
         <h1 className="text-3xl font-bold mb-2 text-slate-900">{content.name}</h1>
@@ -120,6 +118,5 @@ export function TechTemplate({ content, className }: TechTemplateProps) {
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }

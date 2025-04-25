@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { TemplateWrapper } from './TemplateWrapper';
 import { ResumeData } from '@/lib/types';
 
 interface MinimalTemplateProps {
@@ -10,7 +9,6 @@ interface MinimalTemplateProps {
 
 export function MinimalTemplate({ content, className }: MinimalTemplateProps) {
   return (
-    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-8 bg-white font-serif", className)}>
       <header className="mb-8">
         <h1 className="text-3xl mb-2">{content.name}</h1>
@@ -103,6 +101,5 @@ export function MinimalTemplate({ content, className }: MinimalTemplateProps) {
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }

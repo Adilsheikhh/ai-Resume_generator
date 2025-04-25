@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { TemplateWrapper } from "./TemplateWrapper";
 import { ResumeData } from "@/lib/types";
 
 interface PortfolioTemplateProps {
@@ -9,7 +8,6 @@ interface PortfolioTemplateProps {
 
 export function PortfolioTemplate({ content, className }: PortfolioTemplateProps) {
   return (
-    <TemplateWrapper>
     <div className={cn("max-w-[850px] mx-auto p-8 bg-gradient-to-br from-purple-50 to-indigo-50", className)}>
       <header className="text-center mb-12">
         <h1 className="text-4xl font-bold text-indigo-900 mb-3">{content.name}</h1>
@@ -128,6 +126,5 @@ export function PortfolioTemplate({ content, className }: PortfolioTemplateProps
         </section>
       )}
     </div>
-    </TemplateWrapper>
   );
 }
