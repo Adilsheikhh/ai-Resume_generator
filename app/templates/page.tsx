@@ -84,17 +84,17 @@ export default function TemplatesPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold mb-4">Resume Templates</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+    <div className="container mx-auto py-4 sm:py-6 md:py-8 px-3 sm:px-4">
+      <div className="text-center mb-6 sm:mb-8 md:mb-12">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4">Resume Templates</h1>
+        <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-4 sm:mb-6 md:mb-8 px-2">
           Choose from our collection of professionally designed templates
         </p>
-        <div className="flex flex-wrap justify-center gap-2">
+        <div className="flex flex-wrap justify-center gap-1.5 sm:gap-2">
           <Button
             variant={selectedCategory === "all" ? "default" : "outline"}
             onClick={() => setSelectedCategory("all")}
-            className="rounded-full"
+            className="rounded-full text-xs sm:text-sm h-8 sm:h-10"
           >
             All Templates
           </Button>
@@ -103,7 +103,7 @@ export default function TemplatesPage() {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className="rounded-full"
+              className="rounded-full text-xs sm:text-sm h-8 sm:h-10"
             >
               {category.name}
             </Button>
@@ -111,35 +111,39 @@ export default function TemplatesPage() {
         </div>
       </div>
 
-      <div className="space-y-16">
+      <div className="space-y-8 sm:space-y-12 md:space-y-16">
         {categories
           .filter((category) => selectedCategory === "all" || category.id === selectedCategory)
           .map((category) => (
-            <section key={category.name} className="space-y-6">
-              <div className="space-y-2">
-                <h2 className="text-2xl font-semibold tracking-tight">{category.name}</h2>
-                <p className="text-muted-foreground">{category.description}</p>
+            <section key={category.name} className="space-y-3 sm:space-y-4 md:space-y-6">
+              <div className="space-y-1 sm:space-y-2">
+                <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">{category.name}</h2>
+                <p className="text-sm sm:text-base text-muted-foreground">{category.description}</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
                 {category.templates.map((template) => (
                   <Dialog key={template.id}>
                     <Card
                       className="cursor-pointer group hover:border-primary transition-colors"
                       onClick={() => setSelectedTemplate(template.id)}
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-2 sm:p-3 md:p-4">
                         <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden group-hover:border-primary transition-colors">
-                          <div className="w-full transform scale-[0.7] origin-top">
+                          <div className="w-full transform scale-[0.65] sm:scale-[0.7] origin-top">
                             <template.component content={sampleData} />
                           </div>
                         </div>
-                        <div className="mt-4 flex items-center justify-between">
-                          <h3 className="text-lg font-semibold">{template.name}</h3>
+                        <div className="mt-2 sm:mt-3 md:mt-4 flex flex-col xs:flex-row items-center justify-between gap-2">
+                          <h3 className="text-base sm:text-lg font-medium sm:font-semibold">{template.name}</h3>
                           <Link
                             href={`/create?template=${template.id}`}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="w-full xs:w-auto opacity-100 xs:opacity-0 xs:group-hover:opacity-100 transition-opacity"
                           >
-                            <Button variant="outline" size="sm">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              className="w-full xs:w-auto text-xs sm:text-sm h-7 sm:h-8"
+                            >
                               Use Template
                             </Button>
                           </Link>

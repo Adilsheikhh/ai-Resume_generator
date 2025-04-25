@@ -129,8 +129,8 @@ const CreatePageContent = () => {
       wrapper.style.padding = '40px';
       wrapper.style.backgroundColor = 'white';
       wrapper.style.boxSizing = 'border-box';
-      wrapper.style.colorAdjust = 'exact';
-      wrapper.style.WebkitPrintColorAdjust = 'exact';
+      (wrapper.style as any).printColorAdjust = 'exact';
+      (wrapper.style as any)['-webkit-print-color-adjust'] = 'exact';
       
       // Adjust the clone to fit A4 proportions
       clone.style.transform = 'none';
@@ -145,8 +145,8 @@ const CreatePageContent = () => {
       allTextElements.forEach(el => {
         const element = el as HTMLElement;
         if (element.style.color) {
-          element.style.colorAdjust = 'exact';
-          element.style.WebkitPrintColorAdjust = 'exact';
+          (element.style as any).printColorAdjust = 'exact';
+          (element.style as any)['-webkit-print-color-adjust'] = 'exact';
         }
       });
       
@@ -167,8 +167,8 @@ const CreatePageContent = () => {
           // Additional styles for the cloned document
           const clonedElement = clonedDoc.body.querySelector('[ref="resumeRef"]') as HTMLElement;
           if (clonedElement) {
-            clonedElement.style.colorAdjust = 'exact';
-            clonedElement.style.WebkitPrintColorAdjust = 'exact';
+            (clonedElement.style as any).printColorAdjust = 'exact';
+            (clonedElement.style as any)['-webkit-print-color-adjust'] = 'exact';
           }
         }
       });
@@ -252,28 +252,28 @@ const CreatePageContent = () => {
   };
 
   return (
-    <div className="container mx-auto py-6 px-4">
+    <div className="container mx-auto py-4 sm:py-6 px-3 sm:px-4">
       <div className="flex flex-col lg:flex-row gap-6">
         {/* Left Panel - Editor */}
-        <div className="w-full lg:w-1/2 space-y-6">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold">Create Resume</h1>
-            <div className="flex gap-2">
+        <div className="w-full lg:w-1/2 space-y-4 sm:space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-0">
+            <h1 className="text-2xl sm:text-3xl font-bold">Create Resume</h1>
+            <div className="flex flex-wrap gap-2">
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="outline">Change Template</Button>
+                  <Button variant="outline" className="text-sm sm:text-base">Change Template</Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-3xl max-h-[80vh]">
+                <DialogContent className="w-[95vw] max-w-3xl max-h-[80vh] p-4 sm:p-6">
                   <DialogHeader>
                     <DialogTitle>Choose Template</DialogTitle>
                   </DialogHeader>
                   <ScrollArea className="h-[60vh]">
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 p-4">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4 p-2 sm:p-4">
                     {templates.map((template) => (
                       <Card 
                         key={template.id}
                         className={cn(
-                          "cursor-pointer hover:bg-muted/50 transition-colors p-4",
+                          "cursor-pointer hover:bg-muted/50 transition-colors p-2 sm:p-4",
                           selectedTemplate === template.id && "border-primary"
                         )}
                         onClick={() => setSelectedTemplate(template.id)}
@@ -283,14 +283,19 @@ const CreatePageContent = () => {
                             <template.component content={sampleData} />
                           </div>
                         </div>
-                        <h3 className="text-sm font-medium mt-2 text-center">{template.name}</h3>
+                        <h3 className="text-xs sm:text-sm font-medium mt-2 text-center">{template.name}</h3>
                       </Card>
                     ))}
                   </div>
                   </ScrollArea>
                 </DialogContent>
               </Dialog>
-              <Button variant="outline" onClick={handleEnhanceWithAI} disabled={isEnhancing}>
+              <Button 
+                variant="outline" 
+                onClick={handleEnhanceWithAI} 
+                disabled={isEnhancing}
+                className="text-sm sm:text-base"
+              >
                 {isEnhancing ? "Enhancing..." : "Enhance with AI"}
               </Button>
             </div>
@@ -307,47 +312,52 @@ const CreatePageContent = () => {
 
         {/* Right Panel - Preview */}
         <div className="w-full lg:w-1/2">
-          <Card className="sticky top-6">
-            <div className="p-4 border-b flex justify-between items-center">
-              <h2 className="text-xl font-semibold">Preview</h2>
+          <Card className="sticky top-2 sm:top-6">
+            <div className="p-2 sm:p-4 border-b flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-0">
+              <h2 className="text-lg sm:text-xl font-semibold">Preview</h2>
               <Button 
                 variant="outline" 
-                className="gap-2"
+                className="gap-2 w-full sm:w-auto text-sm sm:text-base"
                 onClick={handleDownload}
                 disabled={isDownloading}
               >
-                <Download className="h-4 w-4" />
+                <Download className="h-3 w-3 sm:h-4 sm:w-4" />
                 {isDownloading ? "Generating..." : "Download PDF"}
               </Button>
             </div>
-            <ScrollArea className="h-[800px]">
-              <div className="p-6 relative">
+            <ScrollArea className="h-[400px] sm:h-[600px] md:h-[700px] lg:h-[800px]">
+              <div className="p-3 sm:p-6 relative flex justify-center">
                 {selectedTemplateData && (
                   <div 
-                    className="border rounded-lg p-4 bg-white print:border-none print:shadow-none relative"
+                    className="border rounded-lg p-2 sm:p-4 bg-white print:border-none print:shadow-none relative max-w-full overflow-hidden"
                     ref={resumeRef}
                     style={{
                       aspectRatio: "210/297", // A4 aspect ratio
-                      maxWidth: "100%",
+                      width: "100%", 
+                      maxHeight: "100%",
+                      transformOrigin: "top center",
+                      margin: "0 auto"
                     }}
                   >
                     {isEnhancing && (
-                      <div className="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 flex flex-col items-center justify-center">
+                      <div className="absolute inset-0 bg-black/10 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-4">
                         <div className="animate-pulse flex flex-col items-center gap-2">
                           <div className="relative">
-                            <Sparkles className="h-12 w-12 text-primary animate-spin" />
+                            <Sparkles className="h-8 w-8 sm:h-12 sm:w-12 text-primary animate-spin" />
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="h-4 w-4 rounded-full bg-primary animate-ping" />
+                              <div className="h-3 w-3 sm:h-4 sm:w-4 rounded-full bg-primary animate-ping" />
                             </div>
                           </div>
-                          <p className="text-xl font-medium text-primary animate-pulse">Enhancing Resume...</p>
-                          <p className="text-sm text-muted-foreground text-center max-w-xs">
-                            Our AI is working to improve your resume's language and formatting for better results
+                          <p className="text-base sm:text-xl font-medium text-primary animate-pulse text-center">Enhancing Resume...</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground text-center max-w-xs">
+                            Our AI is working to improve your resume&apos;s language and formatting for better results
                           </p>
                         </div>
                       </div>
                     )}
-                    <selectedTemplateData.component content={resumeData} />
+                    <div className="transform-gpu w-full h-full">
+                      <selectedTemplateData.component content={resumeData} />
+                    </div>
                   </div>
                 )}
               </div>

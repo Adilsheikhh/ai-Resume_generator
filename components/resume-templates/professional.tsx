@@ -33,32 +33,32 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
   
   return (
     <TemplateWrapper>
-    <div className={cn("max-w-[850px] mx-auto p-8 bg-white", className)}>
-      <header className="border-b-2 pb-4 mb-6" style={{ borderColor: primaryColor }}>
-        <h1 className="text-4xl font-bold mb-2" style={{ color: '#111827' }}>{content.name}</h1>
-        <h2 className="text-xl mb-4" style={{ color: primaryColor }}>{content.title}</h2>
-        <div className="flex gap-6 text-sm">
-          <div className="flex items-center gap-2">
+    <div className={cn("max-w-[850px] mx-auto p-4 sm:p-6 md:p-8 bg-white", className)}>
+      <header className="border-b-2 pb-3 sm:pb-4 mb-4 sm:mb-6" style={{ borderColor: primaryColor }}>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2" style={{ color: '#111827' }}>{content.name}</h1>
+        <h2 className="text-lg sm:text-xl mb-3 sm:mb-4" style={{ color: primaryColor }}>{content.title}</h2>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-6 text-xs sm:text-sm">
+          <div className="flex items-center gap-1 sm:gap-2">
             <span style={{ color: primaryColor }}>Email:</span>
             <span style={{ color: '#374151' }}>{content.contact.email}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <span style={{ color: primaryColor }}>Phone:</span>
             <span style={{ color: '#374151' }}>{content.contact.phone}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <span style={{ color: primaryColor }}>Location:</span>
             <span style={{ color: '#374151' }}>{content.contact.location}</span>
           </div>
         </div>
       </header>
 
-      <section className="mb-6">
+      <section className="mb-4 sm:mb-6">
         <h3 className="text-lg font-semibold mb-3" style={{ color: primaryColor }}>Professional Summary</h3>
         <p className="leading-relaxed" style={{ color: '#4b5563' }}>{content.summary}</p>
       </section>
 
-      <section className="mb-6">
+      <section className="mb-4 sm:mb-6">
         <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Professional Experience</h3>
         {content.experience.map((exp, index) => (
           <div key={index} className="mb-5">
@@ -78,7 +78,7 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
         ))}
       </section>
 
-      <section className="mb-6">
+      <section className="mb-4 sm:mb-6">
         <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Education</h3>
         {content.education.map((edu, index) => (
           <div key={index} className="mb-4">

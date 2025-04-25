@@ -31,25 +31,25 @@ interface ModernTemplateProps {
 export function ModernTemplate({ content, className }: ModernTemplateProps) {
   return (
     <TemplateWrapper >
-    <div className={cn("max-w-[850px] mx-auto p-8 bg-white text-gray-800 scale-100", className)}>
-      <header className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-2">{content.name}</h1>
-        <h2 className="text-2xl text-gray-600 mb-4">{content.title}</h2>
-        <div className="flex justify-center gap-4 text-base text-gray-600">
+    <div className={cn("max-w-[850px] mx-auto p-4 sm:p-6 md:p-8 bg-white text-gray-800", className)}>
+      <header className="text-center mb-6 sm:mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2">{content.name}</h1>
+        <h2 className="text-xl sm:text-2xl text-gray-600 mb-3 sm:mb-4">{content.title}</h2>
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-sm sm:text-base text-gray-600">
           <span>{content.contact.email}</span>
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
           <span>{content.contact.phone}</span>
-          <span>•</span>
+          <span className="hidden sm:inline">•</span>
           <span>{content.contact.location}</span>
         </div>
       </header>
 
-      <section className="mb-6">
+      <section className="mb-5 sm:mb-6">
         <h3 className="text-lg font-semibold border-b border-gray-300 mb-3">Professional Summary</h3>
         <p className="text-gray-700">{content.summary}</p>
       </section>
 
-      <section className="mb-6">
+      <section className="mb-5 sm:mb-6">
         <h3 className="text-lg font-semibold border-b border-gray-300 mb-3">Experience</h3>
         {content.experience.map((exp, index) => (
           <div key={index} className="mb-4">
@@ -67,7 +67,7 @@ export function ModernTemplate({ content, className }: ModernTemplateProps) {
         ))}
       </section>
 
-      <section className="mb-6">
+      <section className="mb-5 sm:mb-6">
         <h3 className="text-lg font-semibold border-b border-gray-300 mb-3">Education</h3>
         {content.education.map((edu, index) => (
           <div key={index} className="mb-3">
