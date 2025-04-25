@@ -1,30 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { TemplateWrapper } from "./TemplateWrapper";
+import { ResumeData } from "@/lib/types";
 
 interface ModernTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -93,6 +73,51 @@ export function ModernTemplate({ content, className }: ModernTemplateProps) {
           ))}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mt-5 sm:mt-6">
+          <h3 className="text-lg font-semibold border-b border-gray-300 mb-3">Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex justify-between items-baseline">
+                <h4 className="font-medium">{project.name}</h4>
+                {project.duration && <span className="text-sm text-gray-600">{project.duration}</span>}
+              </div>
+              <p className="text-gray-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {project.technologies.map((tech, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-gray-100 rounded text-xs text-gray-600">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline mt-1 inline-block">
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section className="mt-5 sm:mt-6">
+          <h3 className="text-lg font-semibold border-b border-gray-300 mb-3">Links</h3>
+          <div className="flex flex-wrap gap-4">
+            {content.links.map((link, index) => (
+              <div key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">
+                  {link.title}
+                </a>
+                {link.description && <p className="text-sm text-gray-600">{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

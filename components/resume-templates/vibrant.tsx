@@ -56,11 +56,56 @@ export function VibrantTemplate({ content }: { content: ResumeData }) {
                 <span className="text-sm" style={{ color: '#ffffff' }}>{edu.duration}</span>
               </div>
               <div style={{ color: '#ffffff' }}>{edu.degree}</div>
+              {edu.location && <div style={{ color: '#ffffff' }} className="text-sm">{edu.location}</div>}
             </div>
           ))}
         </section>
 
-        <section>
+        {content.projects && content.projects.length > 0 && (
+          <section className="mb-6">
+            <h3 className="text-lg font-semibold mb-3" style={{ color: '#ffffff' }}>Projects</h3>
+            {content.projects.map((project, index) => (
+              <div key={index} className="mb-4">
+                <div className="flex justify-between items-baseline">
+                  <h4 className="font-medium" style={{ color: '#ffffff' }}>{project.name}</h4>
+                  {project.duration && <span className="text-sm" style={{ color: '#ffffff' }}>{project.duration}</span>}
+                </div>
+                <p style={{ color: '#ffffff' }} className="mb-2">{project.description}</p>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {project.technologies.map((tech, i) => (
+                      <span 
+                        key={i} 
+                        className="px-2 py-0.5 rounded text-xs"
+                        style={{ 
+                          backgroundColor: '#ffffff',
+                          color: '#ff5e62',
+                          WebkitPrintColorAdjust: 'exact',
+                          printColorAdjust: 'exact'
+                        }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {project.link && (
+                  <a 
+                    href={project.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="underline" 
+                    style={{ color: '#ffffff' }}
+                  >
+                    View Project
+                  </a>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        <section className="mb-6">
           <h3 className="text-lg font-semibold mb-3" style={{ color: '#ffffff' }}>Skills</h3>
           <div className="flex flex-wrap gap-2">
             {content.skills.map((skill, index) => (
@@ -79,6 +124,33 @@ export function VibrantTemplate({ content }: { content: ResumeData }) {
             ))}
           </div>
         </section>
+
+        {content.links && content.links.length > 0 && (
+          <section>
+            <h3 className="text-lg font-semibold mb-3" style={{ color: '#ffffff' }}>Links</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {content.links.map((link, index) => (
+                <a 
+                  key={index}
+                  href={link.url}
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="p-3 rounded"
+                  style={{ 
+                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                    WebkitPrintColorAdjust: 'exact',
+                    printColorAdjust: 'exact'
+                  }}
+                >
+                  <div className="font-medium" style={{ color: '#ffffff' }}>{link.title}</div>
+                  {link.description && (
+                    <div className="text-sm" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>{link.description}</div>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </TemplateWrapper>
   );

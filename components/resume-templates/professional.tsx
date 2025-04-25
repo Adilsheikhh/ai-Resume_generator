@@ -1,29 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { TemplateWrapper } from "./TemplateWrapper";
+import { ResumeData } from '@/lib/types';
+
 interface ProfessionalTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -86,6 +67,7 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
               <div>
                 <h4 className="font-bold" style={{ color: '#1f2937' }}>{edu.school}</h4>
                 <div style={{ color: primaryColor }}>{edu.degree}</div>
+                {edu.location && <div style={{ color: '#4b5563' }} className="text-sm">{edu.location}</div>}
               </div>
               <span className="text-sm" style={{ color: '#6b7280' }}>{edu.duration}</span>
             </div>
@@ -93,7 +75,7 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
         ))}
       </section>
 
-      <section>
+      <section className="mb-4 sm:mb-6">
         <h3 className="text-lg font-semibold mb-3" style={{ color: primaryColor }}>Skills & Expertise</h3>
         <div className="flex flex-wrap gap-3">
           {content.skills.map((skill, index) => (
@@ -112,6 +94,65 @@ export function ProfessionalTemplate({ content, className }: ProfessionalTemplat
           ))}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mb-4 sm:mb-6">
+          <h3 className="text-lg font-semibold mb-4" style={{ color: primaryColor }}>Notable Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex justify-between items-center mb-2">
+                <div>
+                  <h4 className="font-bold" style={{ color: '#1f2937' }}>{project.name}</h4>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="text-sm" style={{ color: primaryColor }}>
+                      {project.technologies.join(' • ')}
+                    </div>
+                  )}
+                </div>
+                {project.duration && <span className="text-sm" style={{ color: '#6b7280' }}>{project.duration}</span>}
+              </div>
+              <p style={{ color: '#4b5563' }} className="mb-2">{project.description}</p>
+              {project.link && (
+                <a 
+                  href={project.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-sm inline-block"
+                  style={{ color: primaryColor }}
+                >
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section>
+          <h3 className="text-lg font-semibold mb-3" style={{ color: primaryColor }}>Professional Links</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {content.links.map((link, index) => (
+              <div 
+                key={index} 
+                className="p-3 rounded-md"
+                style={{ backgroundColor: 'rgba(0,0,0,0.05)' }}
+              >
+                <a 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="font-medium"
+                  style={{ color: primaryColor }}
+                >
+                  {link.title}
+                </a>
+                {link.description && <p className="text-sm mt-1" style={{ color: '#6b7280' }}>{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

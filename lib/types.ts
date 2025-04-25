@@ -22,4 +22,16 @@ export interface ResumeData {
     duration: string;
   }>;
   skills: string[];
+  projects?: Array<{
+    name: string;
+    description: string;
+    link?: string;
+    technologies: string[];
+    duration?: string;
+  }>;
+  links?: Array<{
+    title: string;
+    url: string;
+    description?: string;
+  }>;
 }

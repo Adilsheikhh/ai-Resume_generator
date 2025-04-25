@@ -1,6 +1,6 @@
-
 import { ResumeData } from '@/lib/types';
 import { TemplateWrapper } from "./TemplateWrapper";
+
 export function ClassicTemplate({ content }: { content: ResumeData }) {
   return (
     <TemplateWrapper>
@@ -50,11 +50,12 @@ export function ClassicTemplate({ content }: { content: ResumeData }) {
               <span className="text-gray-600">{edu.duration}</span>
             </div>
             <div className="text-gray-700">{edu.degree}</div>
+            {edu.location && <div className="text-gray-600">{edu.location}</div>}
           </div>
         ))}
       </section>
 
-      <section>
+      <section className="mb-6">
         <h3 className="text-xl font-bold uppercase mb-3 border-b">Skills</h3>
         <div className="flex flex-wrap gap-3">
           {content.skills?.map((skill, index) => (
@@ -64,6 +65,47 @@ export function ClassicTemplate({ content }: { content: ResumeData }) {
           ))}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mb-6">
+          <h3 className="text-xl font-bold uppercase mb-3 border-b">Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex justify-between">
+                <h4 className="font-bold">{project.name}</h4>
+                {project.duration && <span className="text-gray-600">{project.duration}</span>}
+              </div>
+              <p className="text-gray-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="text-gray-600 mb-1">
+                  <span className="font-semibold">Technologies:</span> {project.technologies.join(', ')}
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-gray-600 underline">
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section>
+          <h3 className="text-xl font-bold uppercase mb-3 border-b">Professional Links</h3>
+          <div className="flex flex-col gap-3">
+            {content.links.map((link, index) => (
+              <div key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="font-bold text-gray-700 hover:underline">
+                  {link.title}
+                </a>
+                {link.description && <p className="text-gray-600">{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

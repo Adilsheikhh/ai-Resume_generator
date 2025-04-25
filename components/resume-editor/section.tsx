@@ -53,6 +53,28 @@ export function ResumeSection({
     ]);
   };
 
+  const addProject = () => {
+    const projects = data.projects || [];
+    handleChange("projects", [
+      ...projects,
+      {
+        name: "",
+        description: "",
+        link: "",
+        technologies: [],
+        duration: "",
+      },
+    ]);
+  };
+
+  const addLink = () => {
+    const links = data.links || [];
+    handleChange("links", [
+      ...links,
+      { title: "", url: "", description: "" },
+    ]);
+  };
+
   return (
     <div className="space-y-6 sm:space-y-8">
       <div className="space-y-3 sm:space-y-4">
@@ -331,6 +353,174 @@ export function ResumeSection({
                   const newEdu = [...data.education];
                   newEdu[index] = { ...edu, duration: e.target.value };
                   handleChange("education", newEdu);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Projects Section */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+          <h2 className="text-base sm:text-lg font-semibold">Projects</h2>
+          <Button 
+            onClick={addProject} 
+            variant="outline" 
+            size="sm" 
+            className="text-xs sm:text-sm w-full sm:w-auto"
+          >
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            Add Project
+          </Button>
+        </div>
+        {(data.projects || []).map((project: any, index: any) => (
+          <div key={index} className="space-y-3 sm:space-y-4 border rounded-lg p-3 sm:p-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium text-sm sm:text-base">Project {index + 1}</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const newProjects = [...(data.projects || [])];
+                  newProjects.splice(index, 1);
+                  handleChange("projects", newProjects);
+                }}
+                className="h-8 w-8 p-0"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="grid gap-3 sm:gap-4">
+              <Input
+                placeholder="Project Name"
+                value={project.name || ""}
+                onChange={(e) => {
+                  const newProjects = [...(data.projects || [])];
+                  newProjects[index] = { ...project, name: e.target.value };
+                  handleChange("projects", newProjects);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+              <Textarea
+                placeholder="Project Description"
+                value={project.description || ""}
+                onChange={(e) => {
+                  const newProjects = [...(data.projects || [])];
+                  newProjects[index] = { ...project, description: e.target.value };
+                  handleChange("projects", newProjects);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base min-h-[60px] sm:min-h-[80px]"
+              />
+              <Input
+                placeholder="Project Link (optional)"
+                value={project.link || ""}
+                onChange={(e) => {
+                  const newProjects = [...(data.projects || [])];
+                  newProjects[index] = { ...project, link: e.target.value };
+                  handleChange("projects", newProjects);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+              <Input
+                placeholder="Duration (e.g., 2019-2020)"
+                value={project.duration || ""}
+                onChange={(e) => {
+                  const newProjects = [...(data.projects || [])];
+                  newProjects[index] = { ...project, duration: e.target.value };
+                  handleChange("projects", newProjects);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+              <div>
+                <Label className="text-sm sm:text-base">Technologies Used</Label>
+                <Textarea
+                  placeholder="Enter technologies separated by commas (e.g., React, TypeScript, Node.js)"
+                  value={(project.technologies || []).join(", ")}
+                  onChange={(e) => {
+                    const newProjects = [...(data.projects || [])];
+                    newProjects[index] = {
+                      ...project,
+                      technologies: e.target.value.split(",").map((s) => s.trim()),
+                    };
+                    handleChange("projects", newProjects);
+                  }}
+                  disabled={isLoading}
+                  className="text-sm sm:text-base mt-1 min-h-[60px]"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Links Section */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
+          <h2 className="text-base sm:text-lg font-semibold">Links</h2>
+          <Button 
+            onClick={addLink} 
+            variant="outline" 
+            size="sm" 
+            className="text-xs sm:text-sm w-full sm:w-auto"
+          >
+            <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+            Add Link
+          </Button>
+        </div>
+        {(data.links || []).map((link: any, index: any) => (
+          <div key={index} className="space-y-3 sm:space-y-4 border rounded-lg p-3 sm:p-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium text-sm sm:text-base">Link {index + 1}</h3>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const newLinks = [...(data.links || [])];
+                  newLinks.splice(index, 1);
+                  handleChange("links", newLinks);
+                }}
+                className="h-8 w-8 p-0"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+            <div className="grid gap-3 sm:gap-4">
+              <Input
+                placeholder="Title (e.g., LinkedIn, GitHub, Portfolio)"
+                value={link.title || ""}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])];
+                  newLinks[index] = { ...link, title: e.target.value };
+                  handleChange("links", newLinks);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+              <Input
+                placeholder="URL"
+                value={link.url || ""}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])];
+                  newLinks[index] = { ...link, url: e.target.value };
+                  handleChange("links", newLinks);
+                }}
+                disabled={isLoading}
+                className="text-sm sm:text-base"
+              />
+              <Input
+                placeholder="Description (optional)"
+                value={link.description || ""}
+                onChange={(e) => {
+                  const newLinks = [...(data.links || [])];
+                  newLinks[index] = { ...link, description: e.target.value };
+                  handleChange("links", newLinks);
                 }}
                 disabled={isLoading}
                 className="text-sm sm:text-base"

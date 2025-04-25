@@ -1,30 +1,10 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { TemplateWrapper } from './TemplateWrapper';
+import { ResumeData } from '@/lib/types';
 
 interface MinimalTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -77,12 +57,51 @@ export function MinimalTemplate({ content, className }: MinimalTemplateProps) {
         ))}
       </section>
 
-      <section>
+      <section className="mb-6">
         <h3 className="text-xl mb-4">Skills</h3>
         <div className="text-gray-700">
           {content.skills.join(' • ')}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mb-6">
+          <h3 className="text-xl mb-4">Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex justify-between items-baseline mb-1">
+                <h4 className="font-medium">{project.name}</h4>
+                {project.duration && <span className="text-sm text-gray-600">{project.duration}</span>}
+              </div>
+              <p className="text-gray-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="text-gray-600 italic">Technologies: {project.technologies.join(', ')}</div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-gray-700 underline mt-1 inline-block">
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section>
+          <h3 className="text-xl mb-4">Links</h3>
+          <div className="space-y-2">
+            {content.links.map((link, index) => (
+              <div key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-700 underline">
+                  {link.title}
+                </a>
+                {link.description && <p className="text-sm text-gray-600 italic">{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

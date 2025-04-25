@@ -60,6 +60,44 @@ export const CreativeTemplate: FC<CreativeTemplateProps> = ({ content }) => {
               </div>
             ))}
           </section>
+
+          {/* Projects */}
+          {content.projects && content.projects.length > 0 && (
+            <section className="mt-8">
+              <h3 className="text-xl font-semibold mb-4" style={{ color: '#ea580c' }}>Projects</h3>
+              {content.projects.map((project, i) => (
+                <div key={i} className="mb-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1 sm:gap-0">
+                    <h4 className="text-lg font-medium" style={{ color: '#111827' }}>{project.name}</h4>
+                    {project.duration && <span className="text-sm" style={{ color: '#6b7280' }}>{project.duration}</span>}
+                  </div>
+                  <p className="mb-2" style={{ color: '#4b5563' }}>{project.description}</p>
+                  {project.technologies && project.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {project.technologies.map((tech, j) => (
+                        <span
+                          key={j}
+                          className="px-2 py-0.5 rounded-md text-xs"
+                          style={{ 
+                            backgroundColor: '#ffedd5', 
+                            color: '#c2410c'
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  {project.link && (
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" 
+                      style={{ color: '#ea580c' }} className="text-sm hover:underline">
+                      View Project
+                    </a>
+                  )}
+                </div>
+              ))}
+            </section>
+          )}
         </div>
 
         <div className="col-span-1 sm:col-span-4">
@@ -71,12 +109,13 @@ export const CreativeTemplate: FC<CreativeTemplateProps> = ({ content }) => {
                 <h4 className="font-medium" style={{ color: '#111827' }}>{edu.degree}</h4>
                 <div className="text-sm" style={{ color: '#6b7280' }}>{edu.school}</div>
                 <div className="text-sm" style={{ color: '#9ca3af' }}>{edu.duration}</div>
+                {edu.location && <div className="text-sm" style={{ color: '#9ca3af' }}>{edu.location}</div>}
               </div>
             ))}
           </section>
 
           {/* Skills */}
-          <section>
+          <section className="mb-8">
             <h3 className="text-xl font-semibold mb-4" style={{ color: '#ea580c' }}>Skills</h3>
             <div className="flex flex-wrap gap-2">
               {content.skills.map((skill, i) => (
@@ -95,6 +134,27 @@ export const CreativeTemplate: FC<CreativeTemplateProps> = ({ content }) => {
               ))}
             </div>
           </section>
+
+          {/* Links */}
+          {content.links && content.links.length > 0 && (
+            <section>
+              <h3 className="text-xl font-semibold mb-4" style={{ color: '#ea580c' }}>Links</h3>
+              <div className="space-y-3">
+                {content.links.map((link, i) => (
+                  <div key={i} className="rounded-lg p-3"
+                    style={{ backgroundColor: '#ffedd5' }}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" 
+                      style={{ color: '#c2410c' }} className="font-medium hover:underline">
+                      {link.title}
+                    </a>
+                    {link.description && (
+                      <p className="mt-1 text-xs" style={{ color: '#9ca3af' }}>{link.description}</p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
         </div>
       </div>
     </div>

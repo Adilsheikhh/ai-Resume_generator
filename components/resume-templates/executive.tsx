@@ -53,11 +53,12 @@ export function ExecutiveTemplate({ content }: { content: ResumeData }) {
               <span className="text-gray-600 text-sm">{edu.duration}</span>
             </div>
             <div className="text-gray-700">{edu.degree}</div>
+            {edu.location && <div className="text-gray-600 text-sm">{edu.location}</div>}
           </div>
         ))}
       </section>
 
-      <section>
+      <section className="mb-8">
         <h3 className="text-lg font-bold uppercase tracking-wider text-gray-900 mb-4">Core Competencies</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {content.skills?.map((skill, index) => (
@@ -67,6 +68,53 @@ export function ExecutiveTemplate({ content }: { content: ResumeData }) {
           ))}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mb-8">
+          <h3 className="text-lg font-bold uppercase tracking-wider text-gray-900 mb-4">Notable Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-5">
+              <div className="flex justify-between items-baseline mb-2">
+                <h4 className="text-gray-900 font-semibold">{project.name}</h4>
+                {project.duration && <span className="text-gray-600 text-sm">{project.duration}</span>}
+              </div>
+              <p className="text-gray-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="mb-2">
+                  <span className="text-gray-700 font-medium">Technologies: </span>
+                  <span className="text-gray-600">{project.technologies.join(', ')}</span>
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-gray-700 underline">
+                  Project Details
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section>
+          <h3 className="text-lg font-bold uppercase tracking-wider text-gray-900 mb-4">Professional Profiles</h3>
+          <div className="flex flex-col space-y-3">
+            {content.links.map((link, index) => (
+              <div key={index} className="flex flex-col">
+                <a 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-gray-900 font-medium hover:underline"
+                >
+                  {link.title}
+                </a>
+                {link.description && <p className="text-gray-600 text-sm">{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

@@ -1,29 +1,9 @@
-
 import { cn } from "@/lib/utils";
 import { TemplateWrapper } from "./TemplateWrapper";
+import { ResumeData } from "@/lib/types";
+
 interface PortfolioTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -77,6 +57,7 @@ export function PortfolioTemplate({ content, className }: PortfolioTemplateProps
                 <h4 className="text-lg font-medium text-indigo-900">{edu.degree}</h4>
                 <div className="text-indigo-700">{edu.school}</div>
                 <div className="text-indigo-600">{edu.duration}</div>
+                {edu.location && <div className="text-indigo-600">{edu.location}</div>}
               </div>
             ))}
           </div>
@@ -95,6 +76,57 @@ export function PortfolioTemplate({ content, className }: PortfolioTemplateProps
           </div>
         </section>
       </div>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mt-10">
+          <h3 className="text-2xl font-semibold text-indigo-900 mb-6">Projects</h3>
+          <div className="space-y-8">
+            {content.projects.map((project, index) => (
+              <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
+                <div className="flex justify-between items-baseline mb-2">
+                  <h4 className="text-xl font-medium text-indigo-900">{project.name}</h4>
+                  {project.duration && <span className="text-indigo-600">{project.duration}</span>}
+                </div>
+                <p className="text-indigo-800 mb-3">{project.description}</p>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {project.technologies.map((tech, i) => (
+                      <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-sm">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {project.link && (
+                  <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-indigo-700 font-medium hover:underline">
+                    View Project
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section className="mt-10">
+          <h3 className="text-2xl font-semibold text-indigo-900 mb-6">Connect With Me</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {content.links.map((link, index) => (
+              <a 
+                key={index}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white p-5 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col"
+              >
+                <span className="text-lg font-medium text-indigo-900">{link.title}</span>
+                {link.description && <span className="text-indigo-600 text-sm mt-1">{link.description}</span>}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

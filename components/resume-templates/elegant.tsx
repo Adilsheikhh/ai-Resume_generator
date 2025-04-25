@@ -1,30 +1,9 @@
-
 import { cn } from "@/lib/utils";
-
+import { ResumeData } from "@/lib/types";
 import { TemplateWrapper } from "./TemplateWrapper";
+
 interface ElegantTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -74,6 +53,7 @@ export function ElegantTemplate({ content, className }: ElegantTemplateProps) {
               <h4 className="text-lg font-medium text-stone-900">{edu.degree}</h4>
               <div className="text-stone-700 font-serif">{edu.school}</div>
               <div className="text-stone-600 italic">{edu.duration}</div>
+              {edu.location && <div className="text-stone-600 italic">{edu.location}</div>}
             </div>
           ))}
         </section>
@@ -89,6 +69,60 @@ export function ElegantTemplate({ content, className }: ElegantTemplateProps) {
           </div>
         </section>
       </div>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-2xl font-serif text-stone-900 mb-6 border-b border-stone-200 pb-2">Notable Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-6">
+              <div className="flex justify-between items-baseline mb-2">
+                <h4 className="text-xl font-medium text-stone-900">{project.name}</h4>
+                {project.duration && <span className="text-stone-600 italic">{project.duration}</span>}
+              </div>
+              <p className="text-stone-700 font-serif mb-3">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="text-stone-600 font-serif mb-2">
+                  <span className="italic">Technologies: </span>
+                  {project.technologies.join(', ')}
+                </div>
+              )}
+              {project.link && (
+                <a 
+                  href={project.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-stone-700 underline font-serif"
+                >
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-2xl font-serif text-stone-900 mb-6 border-b border-stone-200 pb-2">Professional Links</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {content.links.map((link, index) => (
+              <div key={index} className="bg-stone-100 p-4 rounded-md">
+                <a 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-stone-900 font-medium hover:underline"
+                >
+                  {link.title}
+                </a>
+                {link.description && (
+                  <p className="text-stone-600 font-serif mt-1">{link.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

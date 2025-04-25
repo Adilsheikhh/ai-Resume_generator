@@ -1,6 +1,6 @@
-
 import { ResumeData } from '@/lib/types';
 import { TemplateWrapper } from "./TemplateWrapper";
+
 export function MinimalistTemplate({ content }: { content: ResumeData }) {
   return (
     <TemplateWrapper>
@@ -37,7 +37,7 @@ export function MinimalistTemplate({ content }: { content: ResumeData }) {
         ))}
       </section>
 
-      <div className="grid grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <section>
           <h3 className="text-lg uppercase tracking-wide mb-6 text-gray-400">Education</h3>
           {content.education.map((edu, index) => (
@@ -45,6 +45,7 @@ export function MinimalistTemplate({ content }: { content: ResumeData }) {
               <h4 className="font-medium">{edu.school}</h4>
               <div className="text-gray-500">{edu.degree}</div>
               <div className="text-gray-500">{edu.duration}</div>
+              {edu.location && <div className="text-gray-500">{edu.location}</div>}
             </div>
           ))}
         </section>
@@ -60,6 +61,49 @@ export function MinimalistTemplate({ content }: { content: ResumeData }) {
           </div>
         </section>
       </div>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-lg uppercase tracking-wide mb-6 text-gray-400">Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-6">
+              <div className="grid grid-cols-[1fr_auto] gap-4 mb-2">
+                <h4 className="font-medium">{project.name}</h4>
+                {project.duration && <span className="text-gray-500">{project.duration}</span>}
+              </div>
+              <p className="text-gray-600 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="text-gray-500">
+                  Technologies: {project.technologies.join(', ')}
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-gray-500 underline mt-1 inline-block">
+                  Project Link
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-lg uppercase tracking-wide mb-6 text-gray-400">Links</h3>
+          <div className="space-y-3">
+            {content.links.map((link, index) => (
+              <div key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer" className="font-medium text-gray-600 underline">
+                  {link.title}
+                </a>
+                {link.description && (
+                  <p className="text-gray-500 text-sm">{link.description}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

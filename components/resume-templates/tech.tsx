@@ -1,29 +1,9 @@
-
 import { cn } from "@/lib/utils";
-import{ TemplateWrapper } from "./TemplateWrapper";
+import { TemplateWrapper } from "./TemplateWrapper";
+import { ResumeData } from "@/lib/types";
+
 interface TechTemplateProps {
-  content: {
-    name: string;
-    title: string;
-    contact: {
-      email: string;
-      phone: string;
-      location: string;
-    };
-    summary: string;
-    experience: Array<{
-      company: string;
-      position: string;
-      duration: string;
-      description: string[];
-    }>;
-    education: Array<{
-      school: string;
-      degree: string;
-      duration: string;
-    }>;
-    skills: string[];
-  };
+  content: ResumeData;
   className?: string;
 }
 
@@ -75,11 +55,12 @@ export function TechTemplate({ content, className }: TechTemplateProps) {
               <span className="text-sm text-slate-600">{edu.duration}</span>
             </div>
             <div className="text-slate-700">{edu.school}</div>
+            {edu.location && <div className="text-slate-600 text-sm">{edu.location}</div>}
           </div>
         ))}
       </section>
 
-      <section>
+      <section className="mb-6">
         <h3 className="text-lg font-semibold border-b border-slate-300 mb-3 pb-1">Skills</h3>
         <div className="flex flex-wrap gap-2">
           {content.skills.map((skill, index) => (
@@ -89,6 +70,55 @@ export function TechTemplate({ content, className }: TechTemplateProps) {
           ))}
         </div>
       </section>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mb-6">
+          <h3 className="text-lg font-semibold border-b border-slate-300 mb-3 pb-1">Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex justify-between items-baseline">
+                <h4 className="font-medium text-slate-900">{project.name}</h4>
+                {project.duration && <span className="text-sm text-slate-600">{project.duration}</span>}
+              </div>
+              <p className="text-slate-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {project.technologies.map((tech, i) => (
+                    <span key={i} className="px-2 py-0.5 bg-slate-300 rounded text-xs text-slate-700">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline mt-2 inline-block">
+                  {project.link}
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section>
+          <h3 className="text-lg font-semibold border-b border-slate-300 mb-3 pb-1">Links</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {content.links.map((link, index) => (
+              <a 
+                key={index}
+                href={link.url} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="flex flex-col p-3 bg-slate-300 bg-opacity-50 rounded-lg hover:bg-opacity-70 transition-all"
+              >
+                <span className="font-medium text-slate-900">{link.title}</span>
+                {link.description && <span className="text-sm text-slate-600">{link.description}</span>}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

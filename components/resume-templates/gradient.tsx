@@ -57,11 +57,12 @@ export function GradientTemplate({ content }: { content: ResumeData }) {
                 <span style={{ color: '#6b7280' }} className="text-sm">{edu.duration}</span>
               </div>
               <div style={{ color: '#4a6cf7' }}>{edu.degree}</div>
+              {edu.location && <div style={{ color: '#6b7280' }} className="text-sm">{edu.location}</div>}
             </div>
           ))}
         </section>
 
-        <section>
+        <section className="mb-8">
           <h3 style={{ color: '#4a6cf7' }} className="text-lg font-semibold mb-4">Skills</h3>
           <div className="flex flex-wrap gap-2">
             {content.skills.map((skill, index) => (
@@ -78,6 +79,70 @@ export function GradientTemplate({ content }: { content: ResumeData }) {
             ))}
           </div>
         </section>
+
+        {content.projects && content.projects.length > 0 && (
+          <section className="mb-8">
+            <h3 style={{ color: '#4a6cf7' }} className="text-lg font-semibold mb-4">Projects</h3>
+            {content.projects.map((project, index) => (
+              <div key={index} className="mb-6">
+                <div className="flex justify-between items-baseline">
+                  <h4 style={{ color: '#1f2937' }} className="font-bold">{project.name}</h4>
+                  {project.duration && (
+                    <span style={{ color: '#6b7280' }} className="text-sm">{project.duration}</span>
+                  )}
+                </div>
+                <p style={{ color: '#4b5563' }} className="mb-2">{project.description}</p>
+                {project.technologies && project.technologies.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {project.technologies.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 rounded text-xs"
+                        style={{ backgroundColor: '#dbeafe', color: '#4a6cf7' }}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {project.link && (
+                  <a 
+                    href={project.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ color: '#4a6cf7' }}
+                    className="text-sm hover:underline"
+                  >
+                    View Project
+                  </a>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        {content.links && content.links.length > 0 && (
+          <section>
+            <h3 style={{ color: '#4a6cf7' }} className="text-lg font-semibold mb-4">Links</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {content.links.map((link, index) => (
+                <a 
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-3 rounded-lg transition-colors"
+                  style={{ backgroundColor: '#eff6ff' }}
+                >
+                  <h4 style={{ color: '#4a6cf7' }} className="font-medium">{link.title}</h4>
+                  {link.description && (
+                    <p style={{ color: '#6b7280' }} className="text-sm mt-1">{link.description}</p>
+                  )}
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </div>
     </TemplateWrapper>

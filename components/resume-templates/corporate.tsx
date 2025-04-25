@@ -1,6 +1,6 @@
-
 import { ResumeData } from '@/lib/types';
 import { TemplateWrapper } from "./TemplateWrapper";
+
 export function CorporateTemplate({ content }: { content: ResumeData }) {
   return (
     <TemplateWrapper>
@@ -48,6 +48,7 @@ export function CorporateTemplate({ content }: { content: ResumeData }) {
               <h4 className="text-lg font-semibold">{edu.school}</h4>
               <div className="text-gray-700">{edu.degree}</div>
               <div className="text-gray-600">{edu.duration}</div>
+              {edu.location && <div className="text-gray-600">{edu.location}</div>}
             </div>
           ))}
         </section>
@@ -63,6 +64,53 @@ export function CorporateTemplate({ content }: { content: ResumeData }) {
           </div>
         </section>
       </div>
+
+      {content.projects && content.projects.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">Key Projects</h3>
+          {content.projects.map((project, index) => (
+            <div key={index} className="mb-6">
+              <div className="flex justify-between">
+                <h4 className="text-xl font-semibold">{project.name}</h4>
+                {project.duration && <span className="text-gray-600">{project.duration}</span>}
+              </div>
+              <p className="text-gray-700 mb-2">{project.description}</p>
+              {project.technologies && project.technologies.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-2">
+                  <span className="font-medium">Technologies:</span>
+                  <span className="text-gray-600">{project.technologies.join(', ')}</span>
+                </div>
+              )}
+              {project.link && (
+                <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-blue-700 font-medium">
+                  View Project
+                </a>
+              )}
+            </div>
+          ))}
+        </section>
+      )}
+
+      {content.links && content.links.length > 0 && (
+        <section className="mt-8">
+          <h3 className="text-2xl font-bold border-b-2 border-gray-300 pb-2 mb-4">Professional Links</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {content.links.map((link, index) => (
+              <div key={index} className="bg-gray-100 p-3 rounded">
+                <a 
+                  href={link.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-blue-700 font-medium"
+                >
+                  {link.title}
+                </a>
+                {link.description && <p className="text-gray-600 text-sm mt-1">{link.description}</p>}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
     </TemplateWrapper>
   );

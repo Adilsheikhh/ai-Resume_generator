@@ -60,7 +60,28 @@ const sampleData = {
       duration: "2012 - 2016"
     }
   ],
-  skills: ["JavaScript", "React", "Node.js", "Python", "AWS"]
+  skills: ["JavaScript", "React", "Node.js", "Python", "AWS"],
+  projects: [
+    {
+      name: "E-commerce Platform",
+      description: "Built a scalable e-commerce platform with React and Node.js",
+      link: "https://github.com/johndoe/ecommerce",
+      technologies: ["React", "Node.js", "MongoDB"],
+      duration: "2019 - 2020"
+    }
+  ],
+  links: [
+    {
+      title: "GitHub",
+      url: "https://github.com/johndoe",
+      description: "View my open source projects"
+    },
+    {
+      title: "LinkedIn",
+      url: "https://linkedin.com/in/johndoe",
+      description: "Professional profile"
+    }
+  ]
 };
 
 const templates = [
