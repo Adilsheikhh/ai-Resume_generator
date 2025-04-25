@@ -1,9 +1,7 @@
 import { ResumeData } from '@/lib/types';
-import { TemplateWrapper } from "./TemplateWrapper";
 
 export function GradientTemplate({ content }: { content: ResumeData }) {
   return (
-    <TemplateWrapper>
     <div className="max-w-[850px] mx-auto bg-white">
       <div 
         className="p-8 text-white"
@@ -145,6 +143,5 @@ export function GradientTemplate({ content }: { content: ResumeData }) {
         )}
       </div>
     </div>
-    </TemplateWrapper>
   );
 }

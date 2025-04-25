@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, Suspense } from "react";
+import { useState, useRef, Suspense, useEffect, useMemo, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,6 +17,7 @@ import { MinimalistTemplate } from "@/components/resume-templates/minimalist";
 import { ClassicTemplate } from "@/components/resume-templates/classic";
 import { ModernPlusTemplate } from "@/components/resume-templates/modern-plus";
 import { VibrantTemplate } from "@/components/resume-templates/vibrant";
+import { TemplateWrapper } from "@/components/resume-templates/TemplateWrapper";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Dialog,
@@ -33,6 +34,23 @@ import { Download, Sparkles } from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from 'axios';
+
+// Add this custom hook for debouncing
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+  
+  return debouncedValue;
+}
 
 const sampleData = {
   name: "John Doe",
@@ -97,6 +115,8 @@ const templates = [
   { id: "minimalist", name: "Minimalist", component: MinimalistTemplate },
   { id: "classic", name: "Classic", component: ClassicTemplate },
   { id: "modern-plus", name: "Modern Plus", component: ModernPlusTemplate },
+  { id: "elegant", name: "Elegant", component: ExecutiveTemplate }, // Add missing template
+  { id: "portfolio", name: "Portfolio", component: CreativeTemplate }, // Add missing template
   { id: "vibrant", name: "Vibrant", component: VibrantTemplate },
 ];
 
@@ -105,16 +125,28 @@ const CreatePageContent = () => {
   const searchParams = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState(searchParams.get('template') || 'modern');
   const [resumeData, setResumeData] = useState<ResumeData>(sampleData);
+  // Use debounced version for the preview to prevent excessive re-renders
+  const debouncedResumeData = useDebounce<ResumeData>(resumeData, 300);
   const resumeRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
 
   // Create a wrapper function to handle the type conversion
-  const handleResumeDataChange = (data: ResumeData) => {
+  const handleResumeDataChange = useCallback((data: ResumeData) => {
     setResumeData(data);
-  };
+  }, []);
 
-  const selectedTemplateData = templates.find(t => t.id === selectedTemplate);
+  // Find the selected template with memoization
+  const selectedTemplateData = useMemo(() => 
+    templates.find(t => t.id === selectedTemplate), 
+    [selectedTemplate]
+  );
+
+  // Memoize the template component to prevent unnecessary re-renders
+  const TemplateComponent = useMemo(() => {
+    if (!selectedTemplateData) return null;
+    return selectedTemplateData.component;
+  }, [selectedTemplateData]);
 
   const handleDownload = async () => {
     if (!resumeRef.current) return;
@@ -133,11 +165,6 @@ const CreatePageContent = () => {
           body, html {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
-            color-adjust: exact !important;
-          }
-          * {
-            color-adjust: exact !important;
-            print-color-adjust: exact !important;
           }
         }
       `;
@@ -147,17 +174,15 @@ const CreatePageContent = () => {
       const resumeElement = resumeRef.current;
       const clone = resumeElement.cloneNode(true) as HTMLElement;
       
-      // Create a wrapper with A4 dimensions (210mm x 297mm at 96 DPI)
+      // Create a wrapper with A4 dimensions
       const wrapper = document.createElement('div');
       wrapper.style.width = '794px'; // A4 width at 96 DPI
       wrapper.style.position = 'absolute';
-      wrapper.style.top = '0';
-      wrapper.style.left = '0';
+      wrapper.style.top = '-9999px';
+      wrapper.style.left = '-9999px';
       wrapper.style.padding = '40px';
       wrapper.style.backgroundColor = 'white';
       wrapper.style.boxSizing = 'border-box';
-      (wrapper.style as any).printColorAdjust = 'exact';
-      (wrapper.style as any)['-webkit-print-color-adjust'] = 'exact';
       
       // Adjust the clone to fit A4 proportions
       clone.style.transform = 'none';
@@ -167,35 +192,23 @@ const CreatePageContent = () => {
       clone.style.boxShadow = 'none';
       clone.style.border = 'none';
       
-      // Ensure font colors are preserved
-      const allTextElements = clone.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, li, a, div');
-      allTextElements.forEach(el => {
-        const element = el as HTMLElement;
-        if (element.style.color) {
-          (element.style as any).printColorAdjust = 'exact';
-          (element.style as any)['-webkit-print-color-adjust'] = 'exact';
-        }
-      });
-      
       // Append the clone to the wrapper and the wrapper to the body
       wrapper.appendChild(clone);
       document.body.appendChild(wrapper);
       
-      // Capture the canvas with appropriate settings
+      // Optimize canvas generation with better settings
       const canvas = await html2canvas(wrapper, {
-        scale: 3, // Higher scale for better quality
+        scale: 2, // Balance between quality and performance
         useCORS: true,
         allowTaint: true,
         backgroundColor: "#ffffff",
         logging: false,
-        windowWidth: wrapper.offsetWidth,
-        windowHeight: wrapper.offsetHeight,
+        imageTimeout: 0, // No timeout for images
         onclone: (clonedDoc) => {
-          // Additional styles for the cloned document
+          // Minimal operations in the clone callback
           const clonedElement = clonedDoc.body.querySelector('[ref="resumeRef"]') as HTMLElement;
           if (clonedElement) {
-            (clonedElement.style as any).printColorAdjust = 'exact';
-            (clonedElement.style as any)['-webkit-print-color-adjust'] = 'exact';
+            clonedElement.style.visibility = 'visible';
           }
         }
       });
@@ -204,8 +217,8 @@ const CreatePageContent = () => {
       document.body.removeChild(wrapper);
       document.head.removeChild(style);
       
-      // Create PDF with proper A4 dimensions
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      // Create and optimize PDF with proper A4 dimensions
+      const imgData = canvas.toDataURL('image/jpeg', 0.95); // Slightly reduced quality for better performance
       const pdf = new jsPDF({
         orientation: 'portrait',
         unit: 'mm',
@@ -214,19 +227,11 @@ const CreatePageContent = () => {
       });
       
       const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = pdf.internal.pageSize.getHeight();
-      
-      // Calculate the aspect ratio
-      const imgWidth = canvas.width;
-      const imgHeight = canvas.height;
-      const ratio = imgWidth / imgHeight;
-      
-      // Use full width of the PDF and calculate height based on aspect ratio
-      const scaledWidth = pdfWidth;
+      const ratio = canvas.width / canvas.height;
       const scaledHeight = pdfWidth / ratio;
       
       // Add image to PDF with proper positioning
-      pdf.addImage(imgData, 'JPEG', 0, 0, scaledWidth, scaledHeight);
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, scaledHeight);
       
       // Save the PDF with the user's name
       pdf.save(`${resumeData.name.replace(/\s+/g, '_')}_resume.pdf`);
@@ -305,10 +310,13 @@ const CreatePageContent = () => {
                         )}
                         onClick={() => setSelectedTemplate(template.id)}
                       >
-                        <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden">
-                          <div className="transform scale-[0.6]">
-                            <template.component content={sampleData} />
-                          </div>
+                        <div className="aspect-[1/1.4] rounded-lg border bg-white flex items-center justify-center overflow-hidden relative">
+                          {/* Use TemplateWrapper for efficient preview rendering */}
+                          <TemplateWrapper
+                            Template={template.component}
+                            content={sampleData} 
+                            isPreview={true}
+                          />
                         </div>
                         <h3 className="text-xs sm:text-sm font-medium mt-2 text-center">{template.name}</h3>
                       </Card>
@@ -384,7 +392,9 @@ const CreatePageContent = () => {
                       </div>
                     )}
                     <div className="transform-gpu w-full h-full">
-                      <selectedTemplateData.component content={resumeData} />
+                      {TemplateComponent && (
+                        <TemplateComponent content={debouncedResumeData} />
+                      )}
                     </div>
                   </div>
                 )}
